@@ -225,7 +225,7 @@ void pole_init()
 {
 	pole_queue = xQueueCreate(5, sizeof(struct mot_pap_msg*));
 
-	pid_controller_init(&pid, 1, 200, 1, 1, 100, 5);
+	pid_controller_init(&pid, 1, 0, 0, 100, 100, 5);
 
 	status.type = MOT_PAP_TYPE_STOP;
 

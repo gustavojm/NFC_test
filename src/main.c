@@ -1,3 +1,4 @@
+#include "debug.h"
 #include <RTUcomHMI.h>
 #include "board.h"
 #include "stdio.h"
@@ -8,10 +9,11 @@
 #include "task.h"
 #include "pole.h"
 #include "lift.h"
-#include "debug.h"
 
-#define DEBUG
-int debugLevel = Error;
+int debugLevel = Warn;
+FILE* debugFile = NULL;
+
+bool stall_detection = 1;
 
 int main(void)
 {

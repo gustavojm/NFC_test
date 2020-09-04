@@ -7,6 +7,13 @@
 extern "C" {
 #endif
 
+#if !defined(MAX)
+#define MAX(a, b) (((a) > (b)) ? (a) : (b))
+#endif
+#if !defined(MIN)
+#define MIN(a, b) (((a) < (b)) ? (a) : (b))
+#endif
+
 #define BOARD_CIAA_NXP_4337
 
 #define BOARD_GPIO_0                0
@@ -92,12 +99,15 @@ extern "C" {
  * @param	mcaddr : Pointer to 6-byte character array to populate with MAC address
  * @return	Nothing
  */
-void Board_ENET_GetMacADDR(uint8_t *mcaddr);
+static inline void Board_ENET_GetMacADDR(__attribute__((unused)) uint8_t *mcaddr) {
+	return;
+}
 
-void Board_SSP_Init(LPC_SSP_T *pSSP);
+void Board_SSP_Init(__attribute__((unused)) LPC_SSP_T *pSSP);
 
-void Board_UART_Init(LPC_USART_T *pUART);
-
+static inline void Board_UART_Init(__attribute__((unused)) LPC_USART_T *pUART) {
+	return;
+}
 
 #ifdef __cplusplus
 }

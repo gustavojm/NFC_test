@@ -6,7 +6,7 @@
  * Private types/enumerations/variables
  ****************************************************************************/
 
-#define LPC_SSP           LPC_SSP1
+//#define LPC_SSP           LPC_SSP1
 #define SSP_IRQ           SSP1_IRQn
 #define SSPIRQHANDLER SSP1_IRQHandler
 
@@ -19,7 +19,7 @@ static uint8_t Tx_Buf[BUFFER_SIZE];
 /* Rx buffer */
 static uint8_t Rx_Buf[BUFFER_SIZE];
 
-static SSP_ConfigFormat ssp_format;
+//static SSP_ConfigFormat ssp_format;
 static Chip_SSP_DATA_SETUP_T xf_setup;
 static volatile uint8_t isXferCompleted = 0;
 
@@ -46,7 +46,7 @@ spi_sync_transfer(struct spi_transfer *xfers, uint32_t num_xfers)
 	uint32_t i;
 
 	for (i = 0; i < num_xfers; ++i) {
-		Chip_SSP_RWFrames_Blocking(LPC_SSP, &(xfers[i].xf_setup));
+//		Chip_SSP_RWFrames_Blocking(LPC_SSP, &(xfers[i].xf_setup));
 
 		if (xfers[i].cs_change) {
 			if (i != num_xfers) {
@@ -61,17 +61,17 @@ spi_sync_transfer(struct spi_transfer *xfers, uint32_t num_xfers)
 int32_t spi_init(void)
 {
 	/* SSP initialization */
-	Board_SSP_Init(LPC_SSP);
+//	Board_SSP_Init(LPC_SSP);
 
-	Chip_SSP_Init(LPC_SSP);
+//	Chip_SSP_Init(LPC_SSP);
 
-	ssp_format.frameFormat = SSP_FRAMEFORMAT_SPI;
-	ssp_format.bits = SSP_DATA_BITS;
-	ssp_format.clockMode = SSP_CLOCK_MODE3;
-	Chip_SSP_SetFormat(LPC_SSP, ssp_format.bits, ssp_format.frameFormat,
-			ssp_format.clockMode);
-	Chip_SSP_Enable(LPC_SSP);
+//	ssp_format.frameFormat = SSP_FRAMEFORMAT_SPI;
+//	ssp_format.bits = SSP_DATA_BITS;
+//	ssp_format.clockMode = SSP_CLOCK_MODE3;
+//	Chip_SSP_SetFormat(LPC_SSP, ssp_format.bits, ssp_format.frameFormat,
+//			ssp_format.clockMode);
+//	Chip_SSP_Enable(LPC_SSP);
 
-	Chip_SSP_SetMaster(LPC_SSP, 1);
+//	Chip_SSP_SetMaster(LPC_SSP, 1);
 
 }

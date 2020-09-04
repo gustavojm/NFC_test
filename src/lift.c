@@ -121,28 +121,28 @@ static void lift_limit_switches_handler_task(void *pvParameters)
 }
 
 //IRQHandler for ZS1_LIFT
-void GPIO0_IRQHandler(void)
-{
-	Chip_PININT_ClearIntStatus(LPC_GPIO_PIN_INT, PININTCH(0));
-	status.upLimit = 1;
-	BaseType_t xHigherPriorityTaskWoken;
-	xHigherPriorityTaskWoken = pdFALSE;
-	xSemaphoreGiveFromISR(lift_interrupt_counting_semaphore,
-			&xHigherPriorityTaskWoken);
-	portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-}
+//void GPIO0_IRQHandler(void)
+//{
+//	Chip_PININT_ClearIntStatus(LPC_GPIO_PIN_INT, PININTCH(0));
+//	status.upLimit = 1;
+//	BaseType_t xHigherPriorityTaskWoken;
+//	xHigherPriorityTaskWoken = pdFALSE;
+//	xSemaphoreGiveFromISR(lift_interrupt_counting_semaphore,
+//			&xHigherPriorityTaskWoken);
+//	portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+//}
 
 //IRQHandler for ZS2_LIFT
-void GPIO1_IRQHandler(void)
-{
-	Chip_PININT_ClearIntStatus(LPC_GPIO_PIN_INT, PININTCH(1));
-	status.downLimit = 1;
-	BaseType_t xHigherPriorityTaskWoken;
-	xHigherPriorityTaskWoken = pdFALSE;
-	xSemaphoreGiveFromISR(lift_interrupt_counting_semaphore,
-			&xHigherPriorityTaskWoken);
-	portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-}
+//void GPIO1_IRQHandler(void)
+//{
+//	Chip_PININT_ClearIntStatus(LPC_GPIO_PIN_INT, PININTCH(1));
+//	status.downLimit = 1;
+//	BaseType_t xHigherPriorityTaskWoken;
+//	xHigherPriorityTaskWoken = pdFALSE;
+//	xSemaphoreGiveFromISR(lift_interrupt_counting_semaphore,
+//			&xHigherPriorityTaskWoken);
+//	portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+//}
 
 void lift_init()
 {
