@@ -97,12 +97,14 @@ static void pole_task(void *par)
 
 				case MOT_PAP_TYPE_CLOSED_LOOP:	//PID
 					status.posCmd = msg_rcv->closed_loop_setpoint;
+					lDebug(Info, "pole: CLOSED_LOOP posCmd: %i posAct: %i \n", status.posCmd, status.posAct);
 					//calcular error de posición
 					error = status.posCmd - status.posAct;
 					already_there = (abs(error) < threshold);
 
 					if (already_there) {
 						pole_tmr_stop();
+						lDebug(Info, "pole: already there \n");
 					} else {
 						dir = direction_calculate(error);
 						if (movement_allowed(dir, status.cwLimit,
@@ -225,7 +227,7 @@ void pole_init()
 {
 	pole_queue = xQueueCreate(5, sizeof(struct mot_pap_msg*));
 
-	pid_controller_init(&pid, 1, 0, 0, 100, 100, 5);
+	pid_controller_init(&pid, 1, 0, 0, 100, 100, 0);
 
 	status.type = MOT_PAP_TYPE_STOP;
 

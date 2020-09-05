@@ -20,6 +20,8 @@
 extern QueueHandle_t lift_queue;
 extern QueueHandle_t pole_queue;
 
+bool stall_detection = 1;
+
 static void RTUcomHMI_task(void *par)
 {
 	enum lift_type type = LIFT_TYPE_UP;
@@ -112,6 +114,7 @@ void comm_init()
 {
 	xTaskCreate(RTUcomHMI_task, "RTUcomHMI", configMINIMAL_STACK_SIZE, NULL,
 	COMM_TASK_PRIORITY, NULL);
+	lDebug(Info, "comm: task created \n");
 }
 
 void task_status_get_all()

@@ -246,6 +246,39 @@ static inline void Chip_SCU_PinMuxSet(uint8_t port, uint8_t pin, uint16_t modefu
 	return;
 }
 
+/**
+ * @brief LPC18xx/43xx Pin Interrupt and Pattern Match register block structure
+ */
+typedef struct {			/*!< PIN_INT Structure */
+	__IO uint32_t ISEL;		/*!< Pin Interrupt Mode register */
+	__IO uint32_t IENR;		/*!< Pin Interrupt Enable (Rising) register */
+	__IO uint32_t SIENR;	/*!< Set Pin Interrupt Enable (Rising) register */
+	__IO uint32_t CIENR;	/*!< Clear Pin Interrupt Enable (Rising) register */
+	__IO uint32_t IENF;		/*!< Pin Interrupt Enable Falling Edge / Active Level register */
+	__IO uint32_t SIENF;	/*!< Set Pin Interrupt Enable Falling Edge / Active Level register */
+	__IO uint32_t CIENF;	/*!< Clear Pin Interrupt Enable Falling Edge / Active Level address */
+	__IO uint32_t RISE;		/*!< Pin Interrupt Rising Edge register */
+	__IO uint32_t FALL;		/*!< Pin Interrupt Falling Edge register */
+	__IO uint32_t IST;		/*!< Pin Interrupt Status register */
+} LPC_PIN_INT_T;
+
+#define LPC_GPIO_PIN_INT          ((LPC_PIN_INT_T          *) NULL)
+
+#define PININTCH(ch)      (1 << (ch))
+
+/**
+ * @brief	Clear interrupt status in Pin interrupt block
+ * @param	pPININT	: The base address of Pin interrupt block
+ * @param	pins	: Pin interrupts to clear (ORed value of PININTCH*)
+ * @return	Nothing
+ */
+
+static inline void Chip_PININT_ClearIntStatus(__attribute__((unused)) LPC_PIN_INT_T *pPININT, __attribute__((unused)) uint32_t pins)
+{
+	return;
+}
+
+
 #ifdef __cplusplus
 }
 #endif

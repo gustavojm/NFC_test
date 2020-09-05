@@ -41,7 +41,7 @@ int32_t spi_write(uint8_t *data, __attribute__((unused))   int32_t byte_count)
 //	return 1;
 //}
 
-spi_sync_transfer(struct spi_transfer *xfers, uint32_t num_xfers)
+void spi_sync_transfer(struct spi_transfer *xfers, uint32_t num_xfers)
 {
 	uint32_t i;
 

@@ -1,4 +1,3 @@
-#include "debug.h"
 #include <RTUcomHMI.h>
 #include "board.h"
 #include "stdio.h"
@@ -9,19 +8,20 @@
 #include "task.h"
 #include "pole.h"
 #include "lift.h"
+#include "debug.h"
+#include "gui.h"
 
-int debugLevel = Warn;
+int debugLevel = Info;
 FILE* debugFile = NULL;
-
-bool stall_detection = 1;
 
 int main(void)
 {
 	pole_init();
 //	arm_init();
 	lift_init();
-	comm_init();
-
+//	comm_init();
+//    gui_main(0, NULL);
+	gui_init();
 	/* Start the scheduler itself. */
 	vTaskStartScheduler();
 

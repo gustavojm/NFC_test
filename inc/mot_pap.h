@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-#define MOT_PAP_CWLIMIT 						5000
+#define MOT_PAP_CWLIMIT 						55000
 #define MOT_PAP_CCWLIMIT 						5
 #define MOT_PAP_MAX_FREQ						150000
 #define MOT_PAP_MIN_FREQ						100
@@ -50,7 +50,7 @@ struct mot_pap_status {
 
 inline enum mot_pap_direction direction_calculate(int32_t error)
 {
-	return error < 0 ? MOT_PAP_DIRECTION_CW : MOT_PAP_DIRECTION_CCW;
+	return error > 0 ? MOT_PAP_DIRECTION_CW : MOT_PAP_DIRECTION_CCW;
 }
 
 inline bool free_run_speed_ok(int32_t speed)
@@ -61,10 +61,8 @@ inline bool free_run_speed_ok(int32_t speed)
 static inline bool movement_allowed(enum mot_pap_direction dir,
 bool cwLimitReached, bool ccwLimitReached)
 {
-	if ((dir == MOT_PAP_DIRECTION_CW && !cwLimitReached)
-			|| (dir == MOT_PAP_DIRECTION_CCW && !ccwLimitReached))
-		return 1;
-	return 0;
+	return ((dir == MOT_PAP_DIRECTION_CW && !cwLimitReached)
+			|| (dir == MOT_PAP_DIRECTION_CCW && !ccwLimitReached));
 }
 
 int32_t freq_calculate(struct pid *pid, int32_t setpoint, int32_t pos);
