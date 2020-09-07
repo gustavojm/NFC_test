@@ -20,7 +20,7 @@ extern "C" {
 #define MOT_PAP_DIRECTION_CHANGE_DELAY_MS		500
 
 enum mot_pap_direction {
-	MOT_PAP_DIRECTION_CW = 0, MOT_PAP_DIRECTION_CCW = 1,
+	MOT_PAP_DIRECTION_CW, MOT_PAP_DIRECTION_CCW,
 };
 
 enum mot_pap_type {

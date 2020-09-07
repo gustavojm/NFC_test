@@ -1,6 +1,6 @@
 //int gui_main(int argc, char *argv[]);
 
-void gui_task(void);
+void gui_task(void * args);
 
 void gui_init(void);
 

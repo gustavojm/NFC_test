@@ -159,22 +159,13 @@
             <property name="can_focus">False</property>
             <property name="resize_mode">immediate</property>
             <child>
-              <object class="GtkTextView" id="textview1">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">3</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkCheckButton" id="lift_upLimit">
                 <property name="label" translatable="yes">checkbutton</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
-                <property name="xalign">0</property>
+                <property name="xalign">0.070000000298023224</property>
+                <property name="yalign">0.43000000715255737</property>
                 <property name="draw_indicator">True</property>
                 <signal name="toggled" handler="on_lift_upLimit_toggled" swapped="no"/>
               </object>
@@ -199,10 +190,43 @@
               </packing>
             </child>
             <child>
-              <placeholder/>
+              <object class="GtkLabel" id="lift_label">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">label</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="top_attach">3</property>
+              </packing>
             </child>
             <child>
-              <placeholder/>
+              <object class="GtkButton" id="lift_subir">
+                <property name="label" translatable="yes">subir</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <signal name="button-press-event" handler="on_lift_subir_button_press_event" swapped="no"/>
+                <signal name="button-release-event" handler="on_lift_subir_button_release_event" swapped="no"/>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="top_attach">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="lift_bajar">
+                <property name="label" translatable="yes">bajar</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <signal name="button-press-event" handler="on_lift_bajar_button_press_event" swapped="no"/>
+                <signal name="button-release-event" handler="on_lift_bajar_button_release_event" swapped="no"/>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="top_attach">2</property>
+              </packing>
             </child>
             <child>
               <placeholder/>
@@ -222,7 +246,7 @@
           <object class="GtkLabel" id="label3">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">page 3</property>
+            <property name="label" translatable="yes">Lift</property>
           </object>
           <packing>
             <property name="position">2</property>

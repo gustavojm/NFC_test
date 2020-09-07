@@ -4,6 +4,9 @@
 #include "board.h"
 #include "relay.h"
 #include "lift.h"
+#include "gtk/gtk.h"
+
+extern GtkWidget *lift_label;
 
 void relay_init()
 {
@@ -14,11 +17,13 @@ void relay_init()
 
 void relay_lift_dir(enum lift_direction dir)
 {
-//	if (dir == LIFT_DIRECTION_UP) {
+	if (dir == LIFT_DIRECTION_UP) {
+		gtk_label_set_text(GTK_LABEL(lift_label), "Subiendo");
 //		Chip_GPIO_SetPinOutHigh(LPC_GPIO_PORT, 2, 4);
-//	} else {
+	} else {
 //		Chip_GPIO_SetPinOutLow(LPC_GPIO_PORT, 2, 4);
-//	}
+		gtk_label_set_text(GTK_LABEL(lift_label), "Bajando");
+	}
 }
 
 void relay_lift_pwr(bool state)

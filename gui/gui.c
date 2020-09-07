@@ -13,7 +13,6 @@
 extern QueueHandle_t pole_queue;
 //extern QueueHandle_t arm_queue;
 extern QueueHandle_t lift_queue;
-struct mot_pap_msg *pole_msg_snd;
 
 enum dest {
 	Pole, Arm, Lift
@@ -21,14 +20,14 @@ enum dest {
 
 void msg_send(void *msg, enum dest dest)
 {
-	QueueHandle_t *queue;
+	QueueHandle_t *queue = NULL;
 
 	switch (dest) {
 	case Pole:
 		msg = (struct pole_msg*) msg;
 		queue = pole_queue;
 		break;
-//	case Arm:
+	case Arm:
 //		msg = (struct arm_msg *) msg;
 //		queue = arm_queue
 //		break;
@@ -74,12 +73,14 @@ void msg_send(void *msg, enum dest dest)
 
 GtkWidget *scale1;
 GtkWidget *motor;
+GtkWidget *lift_label;
+
 
 void on_button1_clicked()
 {
 }
 
-void gui_task(void)
+void gui_task(void *args)
 {
 	GtkBuilder *builder;
 	GtkWidget *window;
@@ -93,6 +94,8 @@ void gui_task(void)
 			gtk_builder_get_object(builder, "NFC_test_main_window"));
 	scale1 = GTK_WIDGET(gtk_builder_get_object(builder, "scale1"));
 	motor = GTK_WIDGET(gtk_builder_get_object(builder, "motor"));
+	lift_label = GTK_WIDGET(gtk_builder_get_object(builder, "lift_label"));
+
 	gtk_builder_connect_signals(builder, NULL);
 
 //    GTK_WINDOW (gtk_builder_get_object (xml, "NFC_test_main_window"));
@@ -119,6 +122,7 @@ void gui_init(void)
 void on_button1_button_press_event()
 {
 	int32_t position = (int32_t) gtk_range_get_value(GTK_RANGE(scale1));
+	struct mot_pap_msg *pole_msg_snd;
 	pole_msg_snd = (struct mot_pap_msg*) malloc(sizeof(struct mot_pap_msg*));
 	if (pole_msg_snd != NULL) {
 		pole_msg_snd->ctrlEn = 1;
@@ -132,11 +136,64 @@ void on_button1_button_press_event()
 
 void on_button1_button_release_event()
 {
+	struct mot_pap_msg *pole_msg_snd;
 	pole_msg_snd = (struct mot_pap_msg*) malloc(sizeof(struct mot_pap_msg*));
 	if (pole_msg_snd != NULL) {
 		pole_msg_snd->ctrlEn = 1;
 		pole_msg_snd->type = MOT_PAP_TYPE_STOP;
 		msg_send(pole_msg_snd, Pole);
+	} else {
+		lDebug(Error, "gui: out of memory \n");
+	}
+}
+
+void on_lift_subir_button_press_event()
+{
+	struct lift_msg *lift_msg_snd;
+	lift_msg_snd = (struct lift_msg*) malloc(sizeof(struct lift_msg*));
+	if (lift_msg_snd != NULL) {
+		lift_msg_snd->ctrlEn = 1;
+		lift_msg_snd->type = LIFT_TYPE_UP;
+		msg_send(lift_msg_snd, Lift);
+	} else {
+		lDebug(Error, "gui: out of memory \n");
+	}
+}
+
+void on_lift_subir_button_release_event()
+{
+	struct lift_msg *lift_msg_snd;
+	lift_msg_snd = (struct lift_msg*) malloc(sizeof(struct lift_msg*));
+	if (lift_msg_snd != NULL) {
+		lift_msg_snd->ctrlEn = 1;
+		lift_msg_snd->type = LIFT_TYPE_STOP;
+		msg_send(lift_msg_snd, Lift);
+	} else {
+		lDebug(Error, "gui: out of memory \n");
+	}
+}
+
+void on_lift_bajar_button_press_event()
+{
+	struct lift_msg *lift_msg_snd;
+	lift_msg_snd = (struct lift_msg*) malloc(sizeof(struct lift_msg*));
+	if (lift_msg_snd != NULL) {
+		lift_msg_snd->ctrlEn = 1;
+		lift_msg_snd->type = LIFT_TYPE_DOWN;
+		msg_send(lift_msg_snd, Lift);
+	} else {
+		lDebug(Error, "gui: out of memory \n");
+	}
+}
+
+void on_lift_bajar_button_release_event()
+{
+	struct lift_msg *lift_msg_snd;
+	lift_msg_snd = (struct lift_msg*) malloc(sizeof(struct lift_msg*));
+	if (lift_msg_snd != NULL) {
+		lift_msg_snd->ctrlEn = 1;
+		lift_msg_snd->type = LIFT_TYPE_STOP;
+		msg_send(lift_msg_snd, Lift);
 	} else {
 		lDebug(Error, "gui: out of memory \n");
 	}
