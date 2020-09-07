@@ -2,6 +2,10 @@
 #include "stdlib.h"
 #include "stdbool.h"
 #include "board.h"
+#include "gtk/gtk.h"
+#include "mot_pap.h"
+
+extern GtkWidget *motor;
 
 void dout_init()
 {
@@ -30,13 +34,15 @@ void dout_arm_pulse(bool state)
 //	}
 }
 
-void dout_pole_dir(bool dir)
+void dout_pole_dir(enum mot_pap_direction dir)
 {
-//	if (dir) {
+	if (dir == MOT_PAP_DIRECTION_CW) {
 //		Chip_GPIO_SetPinOutHigh(LPC_GPIO_PORT, 5, 14);
-//	} else {
+		gtk_label_set_text (motor, "CW");
+	} else {
 //		Chip_GPIO_SetPinOutLow(LPC_GPIO_PORT, 5, 14);
-//	}
+		gtk_label_set_text (motor, "CCW");
+	}
 }
 
 void dout_pole_pulse(bool state)

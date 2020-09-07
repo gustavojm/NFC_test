@@ -9,7 +9,10 @@
 #include "pole.h"
 #include "lift.h"
 #include "debug.h"
+
+#ifdef TEST
 #include "gui.h"
+#endif
 
 int debugLevel = Info;
 FILE* debugFile = NULL;
@@ -19,9 +22,13 @@ int main(void)
 	pole_init();
 //	arm_init();
 	lift_init();
-//	comm_init();
-//    gui_main(0, NULL);
+
+#ifdef TEST
 	gui_init();
+#else
+	comm_init();
+#endif
+
 	/* Start the scheduler itself. */
 	vTaskStartScheduler();
 

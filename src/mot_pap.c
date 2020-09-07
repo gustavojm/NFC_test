@@ -16,8 +16,8 @@ int32_t freq_calculate(struct pid *pid, int32_t setpoint, int32_t pos)
 	if (freq > MOT_PAP_MAX_FREQ)
 		return MOT_PAP_MAX_FREQ;
 
-//	if (freq < MOT_PAP_MIN_FREQ)
-//		return MOT_PAP_MIN_FREQ;
+	if (freq < MOT_PAP_MIN_FREQ)
+		return MOT_PAP_MIN_FREQ;
 
 	return freq;
 }

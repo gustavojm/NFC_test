@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-#define MOT_PAP_CWLIMIT 						55000
+#define MOT_PAP_CWLIMIT 						5000
 #define MOT_PAP_CCWLIMIT 						5
 #define MOT_PAP_MAX_FREQ						150000
 #define MOT_PAP_MIN_FREQ						100

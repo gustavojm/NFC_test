@@ -79,7 +79,7 @@ static void RTUcomHMI_task(void *par)
 			srandom(times(&time));
 			pole_msg_snd->ctrlEn = 1;
 			pole_msg_snd->type = MOT_PAP_TYPE_CLOSED_LOOP;
-			pole_msg_snd->closed_loop_setpoint = random() % ((2 ^ 16) - 1);
+			pole_msg_snd->closed_loop_setpoint = random() % ((int32_t)pow(2, 16) - 1);
 			if (xQueueSend(pole_queue, &pole_msg_snd,
 					(TickType_t) 10) == pdPASS) {
 				lDebug(Info, "comm: pole command sent \n");
@@ -114,7 +114,6 @@ void comm_init()
 {
 	xTaskCreate(RTUcomHMI_task, "RTUcomHMI", configMINIMAL_STACK_SIZE, NULL,
 	COMM_TASK_PRIORITY, NULL);
-	lDebug(Info, "comm: task created \n");
 }
 
 void task_status_get_all()
