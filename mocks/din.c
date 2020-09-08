@@ -1,6 +1,7 @@
 #include "stdio.h"
 #include "stdbool.h"
 #include "board.h"
+#include "gtk/gtk.h"
 
 //DIN0 P4_0 	PIN1  	GPIO2[0]	ZS1_LIFT
 #define ZS1_LIFT_GPIO_PORT	2
@@ -15,6 +16,10 @@
 #define ZS2_LIFT_PIN_PORT	4
 #define ZS2_LIFT_PIN_NUM	1
 #define ZS2_LIFT_INT_CH		1
+
+extern GtkWidget *lift_upLimit;
+extern GtkWidget *lift_downLimit;
+
 
 void din_init()
 {
@@ -66,10 +71,12 @@ void din_init()
 
 bool din_zs1_lift_state()
 {
-	return 0;
+	return gtk_toggle_button_get_active(
+			GTK_TOGGLE_BUTTON(lift_upLimit));
 }
 
 bool din_zs2_lift_state()
 {
-	return 0;
+	return gtk_toggle_button_get_active(
+			GTK_TOGGLE_BUTTON(lift_downLimit));
 }

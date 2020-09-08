@@ -2,6 +2,7 @@
 #define DOUT_H_
 
 #include <stdint.h>
+#include "mot_pap.h"
 
 #ifdef __cplusplus
 extern "C" {

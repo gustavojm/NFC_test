@@ -2,7 +2,7 @@
 
 void pole_tmr_init(void);
 
-int32_t pole_tmr_set_freq(__attribute__ ((unused)) int32_t tick_rate_hz);
+int32_t pole_tmr_set_freq(int32_t tick_rate_hz);
 
 void pole_tmr_start(void);
 

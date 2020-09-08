@@ -5,7 +5,7 @@
 #include "gtk/gtk.h"
 #include "mot_pap.h"
 
-extern GtkWidget *motor;
+extern GtkWidget *pole_direction_label;
 
 void dout_init()
 {
@@ -38,10 +38,10 @@ void dout_pole_dir(enum mot_pap_direction dir)
 {
 	if (dir == MOT_PAP_DIRECTION_CW) {
 //		Chip_GPIO_SetPinOutHigh(LPC_GPIO_PORT, 5, 14);
-		gtk_label_set_text (GTK_LABEL(motor), "CW");
+		gtk_label_set_text (GTK_LABEL(pole_direction_label), "CW");
 	} else {
 //		Chip_GPIO_SetPinOutLow(LPC_GPIO_PORT, 5, 14);
-		gtk_label_set_text (GTK_LABEL(motor), "CCW");
+		gtk_label_set_text (GTK_LABEL(pole_direction_label), "CCW");
 	}
 }
 

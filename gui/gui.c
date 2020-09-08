@@ -14,11 +14,12 @@ extern QueueHandle_t pole_queue;
 //extern QueueHandle_t arm_queue;
 extern QueueHandle_t lift_queue;
 
-GtkWidget *scale1;
-GtkWidget *motor;
+GtkWidget *pole_direction_label;
 GtkWidget *lift_dir_label;
 GtkWidget *lift_motor_label;
 GtkWidget *ctrlEn;
+GtkWidget *lift_upLimit;
+GtkWidget *lift_downLimit;
 
 enum dest {
 	Pole, Arm, Lift
@@ -47,7 +48,7 @@ void msg_send(void *msg, enum dest dest)
 
 	if (xQueueSend(queue, &msg,
 			(TickType_t) 10) == pdPASS) {
-		lDebug(Info, "gui: pole command sent \n");
+		lDebug(Info, "gui: command sent \n");
 	} else {
 		lDebug(Warn, "gui: unable to send pole command \n");
 	}
@@ -65,13 +66,14 @@ void gui_task(void *args)
 
 	window = GTK_WIDGET(
 			gtk_builder_get_object(builder, "NFC_test_main_window"));
-	scale1 = GTK_WIDGET(gtk_builder_get_object(builder, "scale1"));
-	motor = GTK_WIDGET(gtk_builder_get_object(builder, "motor"));
+	pole_direction_label = GTK_WIDGET(gtk_builder_get_object(builder, "pole_direction_label"));
 	ctrlEn = GTK_WIDGET(gtk_builder_get_object(builder, "ctrlEn"));
 	lift_dir_label = GTK_WIDGET(
 			gtk_builder_get_object(builder, "lift_dir_label"));
 	lift_motor_label = GTK_WIDGET(
 			gtk_builder_get_object(builder, "lift_motor_label"));
+	lift_upLimit = GTK_WIDGET(gtk_builder_get_object(builder, "lift_upLimit"));
+	lift_downLimit = GTK_WIDGET(gtk_builder_get_object(builder, "lift_downLimit"));
 
 	gtk_builder_connect_signals(builder, NULL);
 
@@ -128,6 +130,51 @@ void on_button1_button_release_event()
 		lDebug(Error, "gui: out of memory \n");
 	}
 }
+
+void on_pole_free_run_cw_button_event(GtkWidget *widget, GdkEventButton *event,
+		gpointer user_data)
+{
+	int32_t vel = (int32_t) gtk_range_get_value(GTK_RANGE(user_data));
+
+	struct mot_pap_msg *pole_msg_snd;
+	pole_msg_snd = (struct mot_pap_msg*) malloc(sizeof(struct mot_pap_msg*));
+	if (pole_msg_snd != NULL) {
+		pole_msg_snd->ctrlEn = gtk_toggle_button_get_active(
+				GTK_TOGGLE_BUTTON(ctrlEn));
+		if (event->type == GDK_BUTTON_PRESS)
+			pole_msg_snd->type = MOT_PAP_TYPE_FREE_RUNNING;
+		if (event->type == GDK_BUTTON_RELEASE)
+			pole_msg_snd->type = MOT_PAP_TYPE_STOP;
+		pole_msg_snd->free_run_direction = MOT_PAP_DIRECTION_CW;
+		pole_msg_snd->free_run_speed = vel;
+		msg_send(pole_msg_snd, Pole);
+	} else {
+		lDebug(Error, "gui: out of memory \n");
+	}
+}
+
+void on_pole_free_run_ccw_button_event(GtkWidget *widget, GdkEventButton *event,
+		gpointer user_data)
+{
+	int32_t vel = (int32_t) gtk_range_get_value(GTK_RANGE(user_data));
+
+	struct mot_pap_msg *pole_msg_snd;
+	pole_msg_snd = (struct mot_pap_msg*) malloc(sizeof(struct mot_pap_msg*));
+	if (pole_msg_snd != NULL) {
+		pole_msg_snd->ctrlEn = gtk_toggle_button_get_active(
+				GTK_TOGGLE_BUTTON(ctrlEn));
+		if (event->type == GDK_BUTTON_PRESS)
+			pole_msg_snd->type = MOT_PAP_TYPE_FREE_RUNNING;
+		if (event->type == GDK_BUTTON_RELEASE)
+			pole_msg_snd->type = MOT_PAP_TYPE_STOP;
+		pole_msg_snd->free_run_direction = MOT_PAP_DIRECTION_CCW;
+		pole_msg_snd->free_run_speed = vel;
+		msg_send(pole_msg_snd, Pole);
+	} else {
+		lDebug(Error, "gui: out of memory \n");
+	}
+}
+
 
 void on_lift_subir_event(GtkWidget *widget, GdkEventButton *event,
 		gpointer user_data)
