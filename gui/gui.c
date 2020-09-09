@@ -49,9 +49,9 @@ void msg_send(void *msg, enum dest dest)
 
 	if (xQueueSend(queue, &msg,
 			(TickType_t) 10) == pdPASS) {
-		lDebug(Info, "gui: command sent \n");
+		lDebug(Info, "gui: command sent");
 	} else {
-		lDebug(Warn, "gui: unable to send pole command \n");
+		lDebug(Warn, "gui: unable to send pole command");
 	}
 }
 
@@ -98,7 +98,7 @@ void gui_init(void)
 
 	xTaskCreate(gui_task, "Gui", configMINIMAL_STACK_SIZE, NULL, 3, NULL);
 
-	lDebug(Info, "Gui: task created \n");
+	lDebug(Info, "Gui: task created");
 }
 
 /*
@@ -119,7 +119,7 @@ void on_pole_close_loop_button_press_event(GtkWidget *widget, GdkEventButton *ev
 		pole_msg_snd->closed_loop_setpoint = position;
 		msg_send(pole_msg_snd, Pole);
 	} else {
-		lDebug(Error, "gui: out of memory \n");
+		lDebug(Error, "gui: out of memory");
 	}
 }
 
@@ -141,7 +141,7 @@ void on_pole_free_run_cw_button_event(GtkWidget *widget, GdkEventButton *event,
 		pole_msg_snd->free_run_speed = vel;
 		msg_send(pole_msg_snd, Pole);
 	} else {
-		lDebug(Error, "gui: out of memory \n");
+		lDebug(Error, "gui: out of memory");
 	}
 }
 
@@ -163,7 +163,7 @@ void on_pole_free_run_ccw_button_event(GtkWidget *widget, GdkEventButton *event,
 		pole_msg_snd->free_run_speed = vel;
 		msg_send(pole_msg_snd, Pole);
 	} else {
-		lDebug(Error, "gui: out of memory \n");
+		lDebug(Error, "gui: out of memory");
 	}
 }
 
@@ -179,7 +179,7 @@ void on_pole_stop_button_button_press_event(GtkWidget *widget, GdkEventButton *e
 		pole_msg_snd->type = MOT_PAP_TYPE_STOP;
 		msg_send(pole_msg_snd, Pole);
 	} else {
-		lDebug(Error, "gui: out of memory \n");
+		lDebug(Error, "gui: out of memory");
 	}
 }
 
@@ -201,7 +201,7 @@ void on_lift_subir_button_event(GtkWidget *widget, GdkEventButton *event,
 			lift_msg_snd->type = LIFT_TYPE_STOP;
 		msg_send(lift_msg_snd, Lift);
 	} else {
-		lDebug(Error, "gui: out of memory \n");
+		lDebug(Error, "gui: out of memory");
 	}
 }
 
@@ -219,7 +219,7 @@ void on_lift_bajar_button_event(GtkWidget *widget, GdkEventButton *event,
 			lift_msg_snd->type = LIFT_TYPE_STOP;
 		msg_send(lift_msg_snd, Lift);
 	} else {
-		lDebug(Error, "gui: out of memory \n");
+		lDebug(Error, "gui: out of memory");
 	}
 }
 
@@ -238,7 +238,7 @@ void on_lift_subir_toggle_toggled(GtkWidget *button, GdkEventButton *event,
 		}
 		msg_send(lift_msg_snd, Lift);
 	} else {
-		lDebug(Error, "gui: out of memory \n");
+		lDebug(Error, "gui: out of memory");
 	}
 }
 
@@ -257,7 +257,7 @@ void on_lift_bajar_toggle_toggled(GtkWidget *button, GdkEventButton *event,
 		}
 		msg_send(lift_msg_snd, Lift);
 	} else {
-		lDebug(Error, "gui: out of memory \n");
+		lDebug(Error, "gui: out of memory");
 	}
 }
 
