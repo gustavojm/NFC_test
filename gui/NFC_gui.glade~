@@ -19,6 +19,7 @@
       <object class="GtkNotebook" id="notebook1">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
+        <property name="opacity">0.94000000134110451</property>
         <child>
           <object class="GtkFixed" id="fixed1">
             <property name="visible">True</property>
@@ -26,32 +27,30 @@
             <child>
               <object class="GtkButton" id="pole_closed_loop_button">
                 <property name="label" translatable="yes">Closed Loop</property>
-                <property name="width_request">100</property>
-                <property name="height_request">80</property>
+                <property name="width_request">87</property>
+                <property name="height_request">30</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="halign">start</property>
                 <property name="valign">start</property>
-                <property name="relief">none</property>
                 <property name="yalign">0.40999999642372131</property>
                 <property name="image_position">top</property>
-                <signal name="button-press-event" handler="on_button1_button_press_event" object="scale1" swapped="no"/>
-                <signal name="button-release-event" handler="on_button1_button_release_event" swapped="no"/>
+                <signal name="button-press-event" handler="on_pole_close_loop_button_press_event" object="closed_loop_setpoint_scale" swapped="no"/>
               </object>
               <packing>
-                <property name="x">132</property>
-                <property name="y">147</property>
+                <property name="x">350</property>
+                <property name="y">268</property>
               </packing>
             </child>
             <child>
-              <object class="GtkScale" id="scale1">
+              <object class="GtkScale" id="closed_loop_setpoint_scale">
                 <property name="width_request">100</property>
-                <property name="height_request">80</property>
+                <property name="height_request">200</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="margin_right">2</property>
-                <property name="margin_bottom">49</property>
+                <property name="halign">start</property>
+                <property name="valign">end</property>
                 <property name="orientation">vertical</property>
                 <property name="adjustment">adjustment1</property>
                 <property name="inverted">True</property>
@@ -62,75 +61,44 @@
                 <property name="value_pos">bottom</property>
               </object>
               <packing>
-                <property name="x">25</property>
-                <property name="y">37</property>
+                <property name="x">350</property>
+                <property name="y">53</property>
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="motor">
+              <object class="GtkLabel" id="pole_direction_label">
                 <property name="width_request">100</property>
-                <property name="height_request">80</property>
+                <property name="height_request">20</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">label</property>
+                <property name="label" translatable="yes">Pole direction</property>
               </object>
               <packing>
-                <property name="x">160</property>
-                <property name="y">62</property>
+                <property name="x">22</property>
+                <property name="y">380</property>
               </packing>
             </child>
             <child>
               <object class="GtkCheckButton" id="ctrlEn">
                 <property name="label" translatable="yes">ctrlEn</property>
-                <property name="width_request">100</property>
-                <property name="height_request">80</property>
+                <property name="width_request">74</property>
+                <property name="height_request">30</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
+                <property name="halign">start</property>
                 <property name="xalign">0</property>
                 <property name="draw_indicator">True</property>
               </object>
-            </child>
-            <child>
-              <object class="GtkButton" id="pole_free_run_up_button">
-                <property name="label" translatable="yes">Pole Free Run Up</property>
-                <property name="width_request">100</property>
-                <property name="height_request">80</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="xalign">0.46000000834465027</property>
-                <property name="yalign">0.47999998927116394</property>
-                <signal name="button-press-event" handler="on_pole_free_run_up_button_event" object="pole_free_run_speed_scale" swapped="no"/>
-                <signal name="button-release-event" handler="on_pole_free_run_up_button_event" swapped="no"/>
-              </object>
               <packing>
-                <property name="x">303</property>
-                <property name="y">30</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="pole_free_run_down_button">
-                <property name="label" translatable="yes">Pole Free Run Down</property>
-                <property name="width_request">100</property>
-                <property name="height_request">80</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="relief">half</property>
-                <property name="xalign">0.50999999046325684</property>
-                <signal name="button-press-event" handler="on_pole_free_run_down_button_event" object="pole_free_run_speed_scale" swapped="no"/>
-                <signal name="button-release-event" handler="on_pole_free_run_down_button_event" swapped="no"/>
-              </object>
-              <packing>
-                <property name="x">308</property>
-                <property name="y">129</property>
+                <property name="x">7</property>
+                <property name="y">15</property>
               </packing>
             </child>
             <child>
               <object class="GtkScale" id="pole_free_run_speed_scale">
                 <property name="width_request">100</property>
-                <property name="height_request">80</property>
+                <property name="height_request">200</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="orientation">vertical</property>
@@ -141,8 +109,89 @@
                 <property name="value_pos">bottom</property>
               </object>
               <packing>
-                <property name="x">223</property>
+                <property name="x">1</property>
                 <property name="y">54</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="pole_stop_button">
+                <property name="label" translatable="yes">STOP</property>
+                <property name="width_request">200</property>
+                <property name="height_request">20</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+              </object>
+              <packing>
+                <property name="x">108</property>
+                <property name="y">340</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButtonBox" id="buttonbox2">
+                <property name="width_request">100</property>
+                <property name="height_request">20</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="orientation">vertical</property>
+                <property name="layout_style">start</property>
+                <child>
+                  <object class="GtkButton" id="pole_free_run_cw_button">
+                    <property name="label" translatable="yes">Pole Free Run CW</property>
+                    <property name="width_request">100</property>
+                    <property name="height_request">10</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="halign">center</property>
+                    <property name="xalign">0.46000000834465027</property>
+                    <property name="yalign">0.47999998927116394</property>
+                    <signal name="button-press-event" handler="on_pole_free_run_cw_button_event" object="pole_free_run_speed_scale" swapped="no"/>
+                    <signal name="button-release-event" handler="on_pole_free_run_cw_button_event" object="pole_free_run_speed_scale" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="padding">6</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="pole_free_run_ccw_button">
+                    <property name="label" translatable="yes">Pole Free Run CCW</property>
+                    <property name="width_request">100</property>
+                    <property name="height_request">10</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="xalign">0.50999999046325684</property>
+                    <signal name="button-press-event" handler="on_pole_free_run_ccw_button_event" object="pole_free_run_speed_scale" swapped="no"/>
+                    <signal name="button-release-event" handler="on_pole_free_run_ccw_button_event" object="pole_free_run_speed_scale" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="x">-14</property>
+                <property name="y">254</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="pole_pulse_label">
+                <property name="name">20</property>
+                <property name="width_request">100</property>
+                <property name="height_request">20</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Pole direction</property>
+              </object>
+              <packing>
+                <property name="x">173</property>
+                <property name="y">380</property>
               </packing>
             </child>
           </object>
@@ -161,21 +210,6 @@
           <object class="GtkLayout" id="layout1">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <child>
-              <object class="GtkFontButton" id="fontbutton1">
-                <property name="width_request">100</property>
-                <property name="height_request">80</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="font">Sans 12</property>
-                <property name="preview_text"/>
-              </object>
-              <packing>
-                <property name="x">81</property>
-                <property name="y">79</property>
-              </packing>
-            </child>
           </object>
           <packing>
             <property name="position">1</property>
@@ -198,71 +232,120 @@
             <property name="can_focus">False</property>
             <property name="resize_mode">immediate</property>
             <child>
-              <object class="GtkCheckButton" id="lift_upLimit">
-                <property name="label" translatable="yes">checkbutton</property>
+              <object class="GtkButtonBox" id="buttonbox3">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="xalign">0.070000000298023224</property>
-                <property name="yalign">0.43000000715255737</property>
-                <property name="draw_indicator">True</property>
-                <signal name="toggled" handler="on_lift_upLimit_toggled" swapped="no"/>
+                <property name="can_focus">False</property>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
+                <property name="margin_left">33</property>
+                <property name="orientation">vertical</property>
+                <property name="layout_style">start</property>
+                <child>
+                  <object class="GtkCheckButton" id="lift_upLimit">
+                    <property name="label" translatable="yes">ZS1_LIFT (upLimit)</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">False</property>
+                    <property name="xalign">0</property>
+                    <property name="draw_indicator">True</property>
+                    <signal name="toggled" handler="on_lift_upLimit_toggled" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="lift_downLimit">
+                    <property name="label" translatable="yes">ZS2_LIFT (downLimit)</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">False</property>
+                    <property name="xalign">0</property>
+                    <property name="draw_indicator">True</property>
+                    <signal name="toggled" handler="on_lift_downLimit_toggled" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">1</property>
+                <property name="top_attach">0</property>
               </packing>
             </child>
             <child>
-              <object class="GtkCheckButton" id="lift_downLimit">
-                <property name="label" translatable="yes">checkbutton</property>
+              <object class="GtkButtonBox" id="buttonbox1">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="xalign">0</property>
-                <property name="draw_indicator">True</property>
-                <signal name="toggled" handler="on_lift_downLimit_toggled" swapped="no"/>
-              </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">2</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="lift_subir">
-                <property name="label" translatable="yes">subir</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <signal name="button-press-event" handler="on_lift_subir_event" swapped="no"/>
-                <signal name="button-release-event" handler="on_lift_subir_event" swapped="no"/>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="lift_bajar">
-                <property name="label" translatable="yes">bajar</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <signal name="button-press-event" handler="on_lift_bajar_event" swapped="no"/>
-                <signal name="button-release-event" handler="on_lift_bajar_event" swapped="no"/>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">2</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToggleButton" id="lift_subir_toggle">
-                <property name="label" translatable="yes">subir</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <signal name="toggled" handler="on_lift_subir_toggle_toggled" swapped="no"/>
+                <property name="can_focus">False</property>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
+                <property name="margin_top">18</property>
+                <property name="margin_bottom">18</property>
+                <property name="orientation">vertical</property>
+                <property name="layout_style">start</property>
+                <child>
+                  <object class="GtkButton" id="lift_subir">
+                    <property name="label" translatable="yes">subir</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <signal name="button-press-event" handler="on_lift_subir_button_event" swapped="no"/>
+                    <signal name="button-release-event" handler="on_lift_subir_button_event" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkToggleButton" id="lift_subir_toggle">
+                    <property name="label" translatable="yes">subir</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <signal name="toggled" handler="on_lift_subir_toggle_toggled" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="lift_bajar">
+                    <property name="label" translatable="yes">bajar</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <signal name="button-press-event" handler="on_lift_bajar_button_event" swapped="no"/>
+                    <signal name="button-release-event" handler="on_lift_bajar_button_event" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkToggleButton" id="lift_bajar_toggle">
+                    <property name="label" translatable="yes">bajar</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <signal name="toggled" handler="on_lift_bajar_toggle_toggled" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
               </object>
               <packing>
                 <property name="left_attach">1</property>
@@ -270,49 +353,35 @@
               </packing>
             </child>
             <child>
-              <object class="GtkGrid" id="grid2">
+              <object class="GtkLabel" id="lift_dir_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <child>
-                  <object class="GtkLabel" id="lift_dir_label">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Dirección</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="lift_motor_label">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Motor</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">0</property>
-                  </packing>
-                </child>
+                <property name="label" translatable="yes">Dirección</property>
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">3</property>
+                <property name="top_attach">2</property>
               </packing>
             </child>
             <child>
-              <object class="GtkToggleButton" id="lift_bajar_toggle">
-                <property name="label" translatable="yes">bajar</property>
+              <object class="GtkLabel" id="lift_motor_label">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <signal name="toggled" handler="on_lift_bajar_toggle_toggled" swapped="no"/>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Motor</property>
               </object>
               <packing>
                 <property name="left_attach">1</property>
-                <property name="top_attach">3</property>
+                <property name="top_attach">2</property>
               </packing>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
             </child>
             <child>
               <placeholder/>

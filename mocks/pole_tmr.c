@@ -43,7 +43,7 @@ void pole_tmr_init(void)
 
 int32_t pole_tmr_set_freq(int32_t tick_rate_hz)
 {
-	int32_t period = (int32_t) ((1.f/tick_rate_hz) * 100000);
+	int32_t period = (int32_t) ((1.f / tick_rate_hz) * 1000000);
 	HERE;
 	if ( xTimerChangePeriod( pole_tmr, pdMS_TO_TICKS(period), 100 ) == pdPASS) {
 		HERE;
@@ -65,8 +65,9 @@ void pole_tmr_start(void)
 void pole_tmr_stop(void)
 {
 	HERE;
-	xTimerStop(pole_tmr, 0);
-	xTimerDelete(pole_tmr, 0);
+	if (pole_tmr != NULL) {
+		xTimerStop(pole_tmr, 0);
+	}
 	HERE;
 }
 
@@ -75,7 +76,7 @@ uint32_t pole_tmr_started(void)
 	HERE;
 	if (xTimerIsTimerActive(pole_tmr) != pdFALSE) {
 		/* xTimer is active, do something. */
-		return true;
 	}
 	HERE;
+	return 1;
 }

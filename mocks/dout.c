@@ -6,6 +6,7 @@
 #include "mot_pap.h"
 
 extern GtkWidget *pole_direction_label;
+extern GtkWidget *pole_pulse_label;
 
 void dout_init()
 {
@@ -47,9 +48,11 @@ void dout_pole_dir(enum mot_pap_direction dir)
 
 void dout_pole_pulse(bool state)
 {
-//	if (state) {
+	if (state) {
 //		Chip_GPIO_SetPinOutHigh(LPC_GPIO_PORT, 0, 8);
-//	} else {
+		gtk_label_set_text (GTK_LABEL(pole_pulse_label), "ON");
+	} else {
 //		Chip_GPIO_SetPinOutLow(LPC_GPIO_PORT, 0, 8);
-//	}
+		gtk_label_set_text (GTK_LABEL(pole_pulse_label), "OFF");
+	}
 }
