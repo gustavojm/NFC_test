@@ -7,7 +7,7 @@
 #include "pole.h"
 #include "debug.h"
 
-#define POLE_SUPERVISOR_RATE    10		//every 10 steps call supervisor task
+#define POLE_SUPERVISOR_RATE    2		//every 10 steps call supervisor task
 
 TimerHandle_t pole_tmr;
 extern SemaphoreHandle_t pole_supervisor_semaphore;
@@ -35,48 +35,37 @@ static void pole_tmr_callback(TimerHandle_t tmr_handle)
 
 void pole_tmr_init(void)
 {
-	HERE;
 	pole_tmr = xTimerCreate("TimerPole", pdMS_TO_TICKS(1), pdTRUE, NULL,
 			pole_tmr_callback);
-	HERE;
 }
 
 int32_t pole_tmr_set_freq(int32_t tick_rate_hz)
 {
-	int32_t period = (int32_t) ((1.f / tick_rate_hz) * 1000000);
-	HERE;
+	int32_t period = (int32_t) ((1.f / tick_rate_hz) * 4000000);
 	if ( xTimerChangePeriod( pole_tmr, pdMS_TO_TICKS(period), 100 ) == pdPASS) {
-		HERE;
 		return 0;
 	}
-	HERE;
 	return 1;
 }
 
 void pole_tmr_start(void)
 {
-	HERE;
 	if ( xTimerStart( pole_tmr, 0 ) != pdPASS) {
 		printf("pole: unable to start timer \n");
 	}
-	HERE;
 }
 
 void pole_tmr_stop(void)
 {
-	HERE;
 	if (pole_tmr != NULL) {
 		xTimerStop(pole_tmr, 0);
 	}
-	HERE;
 }
 
 uint32_t pole_tmr_started(void)
 {
-	HERE;
 	if (xTimerIsTimerActive(pole_tmr) != pdFALSE) {
 		/* xTimer is active, do something. */
 	}
-	HERE;
 	return 1;
 }

@@ -9,6 +9,7 @@
 #include "stdlib.h"
 #include "math.h"
 #include "lift.h"
+#include "string.h"
 
 extern QueueHandle_t pole_queue;
 //extern QueueHandle_t arm_queue;
@@ -17,6 +18,7 @@ extern QueueHandle_t lift_queue;
 GtkWidget *ctrlEn;
 GtkWidget *pole_direction_label;
 GtkWidget *pole_pulse_label;
+GtkWidget *pole_rdc_scale;
 GtkWidget *lift_dir_label;
 GtkWidget *lift_motor_label;
 GtkWidget *lift_upLimit;
@@ -71,6 +73,8 @@ void gui_task(void *args)
 	ctrlEn = GTK_WIDGET(gtk_builder_get_object(builder, "ctrlEn"));
 	pole_direction_label = GTK_WIDGET(
 			gtk_builder_get_object(builder, "pole_direction_label"));
+	pole_rdc_scale = GTK_WIDGET(
+			gtk_builder_get_object(builder, "pole_rdc_scale"));
 	pole_pulse_label = GTK_WIDGET(
 			gtk_builder_get_object(builder, "pole_pulse_label"));
 	lift_dir_label = GTK_WIDGET(
@@ -105,8 +109,8 @@ void gui_init(void)
  * Pole Handlers
  */
 
-void on_pole_close_loop_button_press_event(GtkWidget *widget, GdkEventButton *event,
-		gpointer user_data)
+void on_pole_close_loop_button_press_event(GtkWidget *widget,
+		GdkEventButton *event, gpointer user_data)
 {
 	int32_t position = (int32_t) gtk_range_get_value(GTK_RANGE(user_data));
 
@@ -167,9 +171,8 @@ void on_pole_free_run_ccw_button_event(GtkWidget *widget, GdkEventButton *event,
 	}
 }
 
-
-void on_pole_stop_button_button_press_event(GtkWidget *widget, GdkEventButton *event,
-		gpointer user_data)
+void on_pole_stop_button_event(GtkWidget *widget,
+		GdkEventButton *event, gpointer user_data)
 {
 	struct mot_pap_msg *pole_msg_snd;
 	pole_msg_snd = (struct mot_pap_msg*) malloc(sizeof(struct mot_pap_msg));
@@ -273,6 +276,33 @@ void on_lift_downLimit_toggled(GtkToggleButton *togglebutton,
 {
 	if (gtk_toggle_button_get_active(togglebutton)) { //simulate falling edge
 		GPIO1_IRQHandler();
+	}
+}
+
+void pole_pulse_handler(bool state)
+{
+	int32_t cur_pos = 0;
+	const char *dir;
+	if (state) {
+		gtk_label_set_text(GTK_LABEL(pole_pulse_label), "ON");
+		dir = gtk_label_get_text(GTK_LABEL(pole_direction_label));
+		vDebug("%s", dir);
+		if (strcmp(dir, "CW") == 0) {
+			cur_pos = (int32_t) gtk_range_get_value(GTK_RANGE(pole_rdc_scale));
+			cur_pos++;
+			gtk_range_set_value(GTK_RANGE(pole_rdc_scale), cur_pos);
+			vDebug("%i", cur_pos);
+		}
+
+		if (strcmp(dir, "CCW") == 0) {
+			cur_pos = (int32_t) gtk_range_get_value(GTK_RANGE(pole_rdc_scale));
+			cur_pos--;
+			vDebug("%i", cur_pos);
+			gtk_range_set_value(GTK_RANGE(pole_rdc_scale), cur_pos);
+		}
+
+	} else {
+		gtk_label_set_text(GTK_LABEL(pole_pulse_label), "OFF");
 	}
 }
 

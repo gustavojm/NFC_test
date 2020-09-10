@@ -13,6 +13,12 @@
     <property name="page_increment">1</property>
     <property name="page_size">1</property>
   </object>
+  <object class="GtkAdjustment" id="pole_rdc_adjustment">
+    <property name="upper">65535</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">1</property>
+    <property name="page_size">1</property>
+  </object>
   <object class="GtkWindow" id="NFC_test_main_window">
     <property name="can_focus">False</property>
     <child>
@@ -187,11 +193,26 @@
                 <property name="height_request">20</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Pole direction</property>
+                <property name="label" translatable="yes">Pole pulse</property>
               </object>
               <packing>
                 <property name="x">173</property>
                 <property name="y">380</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkScale" id="pole_rdc_scale">
+                <property name="width_request">400</property>
+                <property name="height_request">40</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="adjustment">pole_rdc_adjustment</property>
+                <property name="round_digits">1</property>
+                <property name="value_pos">bottom</property>
+              </object>
+              <packing>
+                <property name="x">37</property>
+                <property name="y">414</property>
               </packing>
             </child>
           </object>
@@ -200,7 +221,7 @@
           <object class="GtkLabel" id="label1">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">page 1</property>
+            <property name="label" translatable="yes">Pole</property>
           </object>
           <packing>
             <property name="tab_fill">False</property>
@@ -219,7 +240,7 @@
           <object class="GtkLabel" id="label2">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">page 2</property>
+            <property name="label" translatable="yes">Arm</property>
           </object>
           <packing>
             <property name="position">1</property>
@@ -373,12 +394,6 @@
                 <property name="left_attach">1</property>
                 <property name="top_attach">2</property>
               </packing>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
             </child>
             <child>
               <placeholder/>

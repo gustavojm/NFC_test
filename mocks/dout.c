@@ -4,6 +4,7 @@
 #include "board.h"
 #include "gtk/gtk.h"
 #include "mot_pap.h"
+#include "gui.h"
 
 extern GtkWidget *pole_direction_label;
 extern GtkWidget *pole_pulse_label;
@@ -50,9 +51,9 @@ void dout_pole_pulse(bool state)
 {
 	if (state) {
 //		Chip_GPIO_SetPinOutHigh(LPC_GPIO_PORT, 0, 8);
-		gtk_label_set_text (GTK_LABEL(pole_pulse_label), "ON");
+		pole_pulse_handler(state);
 	} else {
 //		Chip_GPIO_SetPinOutLow(LPC_GPIO_PORT, 0, 8);
-		gtk_label_set_text (GTK_LABEL(pole_pulse_label), "OFF");
+		pole_pulse_handler(state);
 	}
 }

@@ -19,7 +19,6 @@
 #define POLE_SUPERVISOR_TASK_PRIORITY ( configMAX_PRIORITIES - 2 )
 
 QueueHandle_t pole_queue = NULL;
-SemaphoreHandle_t lock;
 
 SemaphoreHandle_t pole_supervisor_semaphore;
 
@@ -37,6 +36,8 @@ static void pole_task(void *par)
 	int32_t error, threshold = 10;
 	bool already_there;
 	bool allowed, speed_ok;
+
+	ad2s1210_init(&rdc);
 
 	while (1) {
 		if (xQueueReceive(pole_queue, &msg_rcv, portMAX_DELAY) == pdPASS) {
@@ -166,8 +167,8 @@ static void pole_task(void *par)
 static void supervisor_task(void *par)
 {
 	static int32_t last_pos = 0;
-	int32_t stall_threshold = 10;
-	int32_t error, threshold = 10;
+	int32_t stall_threshold = 1;
+	int32_t error, threshold = 2;
 	bool already_there;
 	enum mot_pap_direction;
 
@@ -197,6 +198,8 @@ static void supervisor_task(void *par)
 
 		if (stall_detection) {
 			if (abs((abs(status.posAct) - abs(last_pos))) < stall_threshold) {
+
+				lDebug(Info, "EN STALL DETECTION posAct=%i, last_pos=%i", abs(status.posAct), abs(last_pos));
 				status.stalled = 1;
 				pole_tmr_stop();
 				relay_main_pwr(0);
@@ -240,13 +243,11 @@ void pole_init()
 
 	status.type = MOT_PAP_TYPE_STOP;
 
-	rdc.gpios.reset = poncho_rdc_reset;
-	rdc.gpios.sample = poncho_rdc_sample;
-	rdc.gpios.wr_fsync = poncho_rdc_pole_wr_fsync;
-	rdc.lock = lock;
-	rdc.resolution = 16;
-
-	ad2s1210_init(&rdc);
+		rdc.gpios.reset = poncho_rdc_reset;
+		rdc.gpios.sample = poncho_rdc_sample;
+		rdc.gpios.wr_fsync = poncho_rdc_pole_wr_fsync;
+		rdc.lock = xSemaphoreCreateMutex();
+		rdc.resolution = 16;
 
 	pole_tmr_init();
 
