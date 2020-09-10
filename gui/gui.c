@@ -281,21 +281,21 @@ void on_lift_downLimit_toggled(GtkToggleButton *togglebutton,
 
 void pole_pulse_handler(bool state)
 {
-	int32_t cur_pos = 0;
+	uint16_t cur_pos = 0;
 	const char *dir;
 	if (state) {
 		gtk_label_set_text(GTK_LABEL(pole_pulse_label), "ON");
 		dir = gtk_label_get_text(GTK_LABEL(pole_direction_label));
 		vDebug("%s", dir);
 		if (strcmp(dir, "CW") == 0) {
-			cur_pos = (int32_t) gtk_range_get_value(GTK_RANGE(pole_rdc_scale));
+			cur_pos = (uint16_t) gtk_range_get_value(GTK_RANGE(pole_rdc_scale));
 			cur_pos++;
 			gtk_range_set_value(GTK_RANGE(pole_rdc_scale), cur_pos);
 			vDebug("%i", cur_pos);
 		}
 
 		if (strcmp(dir, "CCW") == 0) {
-			cur_pos = (int32_t) gtk_range_get_value(GTK_RANGE(pole_rdc_scale));
+			cur_pos = (uint16_t) gtk_range_get_value(GTK_RANGE(pole_rdc_scale));
 			cur_pos--;
 			vDebug("%i", cur_pos);
 			gtk_range_set_value(GTK_RANGE(pole_rdc_scale), cur_pos);

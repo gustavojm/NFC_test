@@ -49,13 +49,13 @@ static void pole_task(void *par)
 				//obtener posición del RDC
 				status.posAct = ad2s1210_read_position(&rdc);
 
-				if (status.posAct > MOT_PAP_CWLIMIT) {
-					status.cwLimit = 1;
-				}
-
-				if (status.posAct < MOT_PAP_CCWLIMIT) {
-					status.ccwLimit = 1;
-				}
+//				if (status.posAct > MOT_PAP_CWLIMIT) {
+//					status.cwLimit = 1;
+//				}
+//
+//				if (status.posAct < MOT_PAP_CCWLIMIT) {
+//					status.ccwLimit = 1;
+//				}
 
 				switch (msg_rcv->type) {
 				case MOT_PAP_TYPE_FREE_RUNNING:
@@ -97,16 +97,17 @@ static void pole_task(void *par)
 					break;
 
 				case MOT_PAP_TYPE_CLOSED_LOOP:	//PID
-					if ((msg_rcv->closed_loop_setpoint > MOT_PAP_CWLIMIT)
-							| (msg_rcv->closed_loop_setpoint < MOT_PAP_CCWLIMIT)) {
-						lDebug(Warn, "pole: movement out of bounds");
-					} else {
+//					if ((msg_rcv->closed_loop_setpoint > MOT_PAP_CWLIMIT)
+//							| (msg_rcv->closed_loop_setpoint < MOT_PAP_CCWLIMIT)) {
+//						lDebug(Warn, "pole: movement out of bounds");
+//					} else
+					{
 						status.posCmd = msg_rcv->closed_loop_setpoint;
 						lDebug(Info, "pole: CLOSED_LOOP posCmd: %i posAct: %i",
 								status.posCmd, status.posAct);
 
 						//calcular error de posición
-						error = status.posCmd - status.posAct;
+						error = shortest_signed_distance_between_circular_values(status.posAct, status.posCmd);
 						already_there = (abs(error) < threshold);
 
 						if (already_there) {
@@ -180,24 +181,25 @@ static void supervisor_task(void *par)
 		status.cwLimit = 0;
 		status.ccwLimit = 0;
 
-		if ((status.dir == MOT_PAP_DIRECTION_CW)
-				&& (status.posAct > MOT_PAP_CWLIMIT)) {
-			status.cwLimit = 1;
-			pole_tmr_stop();
-			lDebug(Warn, "pole: limit CW reached");
-			continue;
-		}
-
-		if ((status.dir == MOT_PAP_DIRECTION_CCW)
-				&& (status.posAct < MOT_PAP_CCWLIMIT)) {
-			status.ccwLimit = 1;
-			pole_tmr_stop();
-			lDebug(Warn, "pole: limit CCW reached");
-			continue;
-		}
+//		if ((status.dir == MOT_PAP_DIRECTION_CW)
+//				&& (status.posAct > MOT_PAP_CWLIMIT)) {
+//			status.cwLimit = 1;
+//			pole_tmr_stop();
+//			lDebug(Warn, "pole: limit CW reached");
+//			continue;
+//		}
+//
+//		if ((status.dir == MOT_PAP_DIRECTION_CCW)
+//				&& (status.posAct < MOT_PAP_CCWLIMIT)) {
+//			status.ccwLimit = 1;
+//			pole_tmr_stop();
+//			lDebug(Warn, "pole: limit CCW reached");
+//			continue;
+//		}
 
 		if (stall_detection) {
-			if (abs((abs(status.posAct) - abs(last_pos))) < stall_threshold) {
+			int32_t increment = shortest_signed_distance_between_circular_values(last_pos, status.posAct);
+			if (abs(increment) < stall_threshold) {
 
 				lDebug(Info, "EN STALL DETECTION posAct=%i, last_pos=%i", abs(status.posAct), abs(last_pos));
 				status.stalled = 1;
@@ -210,7 +212,7 @@ static void supervisor_task(void *par)
 		last_pos = status.posAct;
 
 		if (status.type == MOT_PAP_TYPE_CLOSED_LOOP) {
-			error = status.posCmd - status.posAct;
+			error = shortest_signed_distance_between_circular_values(status.posAct, status.posCmd);
 			already_there = (abs(error) < threshold);
 
 			if (already_there) {
