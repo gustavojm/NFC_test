@@ -73,6 +73,15 @@ void gui_task(void *args)
 	ctrlEn = GTK_WIDGET(gtk_builder_get_object(builder, "ctrlEn"));
 	pole_direction_label = GTK_WIDGET(
 			gtk_builder_get_object(builder, "pole_direction_label"));
+
+	GtkWidget * pole_free_run_speed_scale = GTK_WIDGET(
+			gtk_builder_get_object(builder, "pole_free_run_speed_scale"));
+
+	for (int i=0; i<9; i++) {
+		char v[3];
+		sprintf(v, "%i", i);
+		gtk_scale_add_mark (GTK_SCALE (pole_free_run_speed_scale), i, GTK_POS_RIGHT, v);
+	}
 	pole_rdc_scale = GTK_WIDGET(
 			gtk_builder_get_object(builder, "pole_rdc_scale"));
 	pole_pulse_label = GTK_WIDGET(

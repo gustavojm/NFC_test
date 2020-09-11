@@ -2,12 +2,15 @@
 #include "stdlib.h"
 #include "stdbool.h"
 #include "board.h"
-#include "gtk/gtk.h"
 #include "mot_pap.h"
+
+#ifdef TEST_GUI
 #include "gui.h"
+#include "gtk/gtk.h"
 
 extern GtkWidget *pole_direction_label;
 extern GtkWidget *pole_pulse_label;
+#endif
 
 void dout_init()
 {
@@ -40,10 +43,14 @@ void dout_pole_dir(enum mot_pap_direction dir)
 {
 	if (dir == MOT_PAP_DIRECTION_CW) {
 //		Chip_GPIO_SetPinOutHigh(LPC_GPIO_PORT, 5, 14);
+#ifdef TEST_GUI
 		gtk_label_set_text (GTK_LABEL(pole_direction_label), "CW");
+#endif
 	} else {
 //		Chip_GPIO_SetPinOutLow(LPC_GPIO_PORT, 5, 14);
+#ifdef TEST_GUI
 		gtk_label_set_text (GTK_LABEL(pole_direction_label), "CCW");
+#endif
 	}
 }
 
@@ -51,9 +58,13 @@ void dout_pole_pulse(bool state)
 {
 	if (state) {
 //		Chip_GPIO_SetPinOutHigh(LPC_GPIO_PORT, 0, 8);
+#ifdef TEST_GUI
 		pole_pulse_handler(state);
+#endif
 	} else {
 //		Chip_GPIO_SetPinOutLow(LPC_GPIO_PORT, 0, 8);
+#ifdef TEST_GUI
 		pole_pulse_handler(state);
+#endif
 	}
 }

@@ -4,10 +4,13 @@
 #include "board.h"
 #include "relay.h"
 #include "lift.h"
+
+#ifdef TEST_GUI
 #include "gtk/gtk.h"
 
 extern GtkWidget *lift_dir_label;
 extern GtkWidget *lift_motor_label;
+#endif
 
 void relay_init()
 {
@@ -20,10 +23,14 @@ void relay_lift_dir(enum lift_direction dir)
 {
 	if (dir == LIFT_DIRECTION_UP) {
 //		Chip_GPIO_SetPinOutHigh(LPC_GPIO_PORT, 2, 4);
+#ifdef TEST_GUI
 		gtk_label_set_text(GTK_LABEL(lift_dir_label), "Subiendo");
+#endif
 	} else {
 //		Chip_GPIO_SetPinOutLow(LPC_GPIO_PORT, 2, 4);
+#ifdef TEST_GUI
 		gtk_label_set_text(GTK_LABEL(lift_dir_label), "Bajando");
+#endif
 	}
 }
 
@@ -31,10 +38,14 @@ void relay_lift_pwr(bool state)
 {
 	if (state) {
 //		Chip_GPIO_SetPinOutHigh(LPC_GPIO_PORT, 2, 5);
+#ifdef TEST_GUI
 	gtk_label_set_text(GTK_LABEL(lift_motor_label), "Activado");
+#endif
 	} else {
 //		Chip_GPIO_SetPinOutLow(LPC_GPIO_PORT, 2, 5);
+#ifdef TEST_GUI
 	gtk_label_set_text(GTK_LABEL(lift_motor_label), "Desactivado");
+#endif
 	}
 }
 

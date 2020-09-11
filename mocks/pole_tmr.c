@@ -7,7 +7,7 @@
 #include "pole.h"
 #include "debug.h"
 
-#define POLE_SUPERVISOR_RATE    2		//every 10 steps call supervisor task
+#define POLE_SUPERVISOR_RATE    2		//2 calls to interrupt generates one pulse = one step
 
 TimerHandle_t pole_tmr;
 extern SemaphoreHandle_t pole_supervisor_semaphore;
@@ -24,7 +24,7 @@ static void pole_tmr_callback(TimerHandle_t tmr_handle)
 	// Generate waveform
 	dout_pole_pulse(On);
 
-	if (++steps == POLE_SUPERVISOR_RATE) {
+	if (++steps == MOT_PAP_SUPERVISOR_RATE) {
 		steps = 0;
 		xHigherPriorityTaskWoken = pdFALSE;
 		xSemaphoreGiveFromISR(pole_supervisor_semaphore,

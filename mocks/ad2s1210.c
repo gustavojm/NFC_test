@@ -361,7 +361,9 @@ int32_t ad2s1210_read_position(struct ad2s1210_state *st)
 	if (st->lock != NULL) {
 		if ( xSemaphoreTake(st->lock, portMAX_DELAY ) == pdTRUE) {
 			//ret = ad2s1210_config_read(st, AD2S1210_REG_POSITION);
+#ifdef TEST_GUI
 			ret = (int32_t) gtk_range_get_value(GTK_RANGE(pole_rdc_scale));
+#endif
 			xSemaphoreGive(st->lock);
 		}
 	}
