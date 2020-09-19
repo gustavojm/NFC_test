@@ -12,16 +12,16 @@ extern "C" {
 
 #define AD2S1210_DEF_CONTROL			0x7E
 
-#define AD2S1210_MSB_IS_HIGH			1 << 7
+#define AD2S1210_MSB_MASK			1 << 7
 #define AD2S1210_MSB_IS_LOW				~(1 << 7)
 #define AD2S1210_PHASE_LOCK_RANGE_44	1 << 5
-#define AD2S1210_ENABLE_HYSTERESIS		1 << 4
+#define AD2S1210_HYSTERESIS		1 << 4
 #define AD2S1210_SET_ENRES1				1 << 3
 #define AD2S1210_SET_ENRES0				1 << 2
-#define AD2S1210_SET_RES1				1 << 1
-#define AD2S1210_SET_RES0				1 << 0
+#define AD2S1210_RES1				1 << 1
+#define AD2S1210_RES0				1 << 0
 
-#define AD2S1210_SET_RESOLUTION		(AD2S1210_SET_RES1 | AD2S1210_SET_RES0)
+#define AD2S1210_RESOLUTION_MASK		(AD2S1210_RES1 | AD2S1210_RES0)
 
 #define AD2S1210_REG_POSITION			0x80
 #define AD2S1210_REG_VELOCITY			0x82
@@ -102,9 +102,9 @@ int32_t ad2s1210_set_reg(struct ad2s1210_state *st, uint8_t address, uint8_t dat
 
 int32_t ad2s1210_init(struct ad2s1210_state *st);
 
-int32_t ad2s1210_read_position(struct ad2s1210_state *st);
+uint16_t ad2s1210_read_position(struct ad2s1210_state *st);
 
-int32_t ad2s1210_read_velocity(struct ad2s1210_state *st);
+int16_t ad2s1210_read_velocity(struct ad2s1210_state *st);
 
 #ifdef __cplusplus
 }

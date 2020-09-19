@@ -6,6 +6,7 @@
 #include "dout.h"
 #include "pole.h"
 #include "debug.h"
+#include "pole.h"
 
 #define POLE_SUPERVISOR_RATE    2		//2 calls to interrupt generates one pulse = one step
 
@@ -17,9 +18,17 @@ static void pole_tmr_callback(TimerHandle_t tmr_handle)
 	uint32_t static steps = 0;
 	static bool On = false;
 	BaseType_t xHigherPriorityTaskWoken;
+	static enum mot_pap_direction last_dir = MOT_PAP_DIRECTION_CW;
 
 //	if (Chip_TIMER_MatchPending(LPC_TIMER0, 1)) {
 //		Chip_TIMER_ClearMatch(LPC_TIMER0, 1);
+
+		if (pole_get_status().dir != last_dir) {
+			HERE;
+			steps = 0;
+			last_dir = pole_get_status().dir;
+		}
+
 	On = (bool) !On;
 	// Generate waveform
 	dout_pole_pulse(On);

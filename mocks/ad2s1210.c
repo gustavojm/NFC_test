@@ -20,18 +20,18 @@ extern GtkWidget *pole_rdc_scale;
 const uint32_t ad2s1210_resolution_value[] = { 10, 12, 14, 16 };
 
 int32_t spi_write(uint8_t *data, __attribute__((unused))     int32_t byte_count);
-int32_t spi_sync_transfer(struct spi_transfer *xfer,
+int32_t spi_sync_transfer(Chip_SSP_DATA_SETUP_T *xfers,
 		__attribute__((unused))     int32_t byte_count);
 
 /* write 1 bytes (address or data) to the chip */
 int32_t ad2s1210_config_write(struct ad2s1210_state *st, uint8_t data)
 {
-//	int32_t ret = 0;
+	int32_t ret = 0;
 //
 //	st->tx[0] = data;
 //	ret = spi_write(st->tx, 1);
 //
-//	return ret;
+	return ret;
 }
 
 /* read value from one of the registers */
@@ -354,15 +354,15 @@ int32_t ad2s1210_init(struct ad2s1210_state *st)
 	return ret;
 }
 
-int32_t ad2s1210_read_position(struct ad2s1210_state *st)
+uint16_t ad2s1210_read_position(struct ad2s1210_state *st)
 {
-	int32_t ret = 0;
+	uint16_t ret = 0;
 
 	if (st->lock != NULL) {
 		if ( xSemaphoreTake(st->lock, portMAX_DELAY ) == pdTRUE) {
 			//ret = ad2s1210_config_read(st, AD2S1210_REG_POSITION);
 #ifdef TEST_GUI
-			ret = (int32_t) gtk_range_get_value(GTK_RANGE(pole_rdc_scale));
+			ret = (uint16_t) gtk_range_get_value(GTK_RANGE(pole_rdc_scale));
 #endif
 			xSemaphoreGive(st->lock);
 		}
@@ -370,9 +370,9 @@ int32_t ad2s1210_read_position(struct ad2s1210_state *st)
 	return ret;
 }
 
-int32_t ad2s1210_read_velocity(struct ad2s1210_state *st)
+int16_t ad2s1210_read_velocity(struct ad2s1210_state *st)
 {
-	int32_t ret = 0;
+	int16_t ret = 0;
 
 	if (st->lock != NULL) {
 		if ( xSemaphoreTake(st->lock, portMAX_DELAY ) == pdTRUE) {
