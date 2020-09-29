@@ -1,13 +1,18 @@
 #ifndef PID_H_
 #define PID_H_
 
-#include "FreeRTOS.h"
 #include <stdint.h>
+
+#include "FreeRTOS.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+/**
+ * @struct 	pid
+ * @brief	PID instance structure.
+ */
 struct pid {
 	double kp, ki, kd;
 	int32_t sample_time_in_ticks;

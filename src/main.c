@@ -1,26 +1,24 @@
-#include <RTUcomHMI.h>
-#include "board.h"
-#include "stdio.h"
-#include "stdint.h"
-#include "stdbool.h"
-#include "stdint.h"
+#include <execinfo.h>
+#include <signal.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include <stdint.h>
+
 #include "FreeRTOS.h"
 #include "task.h"
 #include "pole.h"
 #include "lift.h"
 #include "debug.h"
 
-#include <execinfo.h>
-#include <signal.h>
-#include <stdlib.h>
-#include <unistd.h>
+#include "RTUcomHMI.h"
+#include "board.h"
 
 #ifdef TEST_GUI
 #include "gui.h"
 #endif
-
-int debugLevel = Info;
-FILE* debugFile = NULL;
 
 #ifdef TEST_GUI
 void handler(int sig) {
@@ -39,6 +37,7 @@ void handler(int sig) {
 
 int main(void)
 {
+	debugSetLevel(Info);
 #ifdef TEST_GUI
     signal(SIGSEGV, handler);   // install our handler
 #endif
@@ -60,6 +59,11 @@ int main(void)
 }
 
 /*-----------------------------------------------------------*/
+/**
+ * @brief	configASSERT callback function
+ * @param 	ulLine		: line where configASSERT was called
+ * @param 	pcFileName	: file where configASSERT was called
+ */
 void vAssertCalled(unsigned long ulLine, const char *const pcFileName)
 {
 	//volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;

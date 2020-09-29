@@ -1,19 +1,18 @@
-#include "pole_tmr.h"
-#include "pole.h"
-#include "stdio.h"
-#include "stdlib.h"
-#include "math.h"
-#include "stdbool.h"
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdbool.h>
+
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
 #include "semphr.h"
-#include "stdint.h"
+#include "pole.h"
 #include "ad2s1210.h"
 #include "pid.h"
 #include "dout.h"
 #include "relay.h"
 #include "debug.h"
+#include "pole_tmr.h"
 
 #define POLE_TASK_PRIORITY ( configMAX_PRIORITIES - 2 )
 #define POLE_SUPERVISOR_TASK_PRIORITY ( configMAX_PRIORITIES - 2 )
@@ -23,19 +22,25 @@ QueueHandle_t pole_queue = NULL;
 SemaphoreHandle_t pole_supervisor_semaphore;
 
 static struct mot_pap_status status;
-enum mot_pap_direction dir;
 
 extern bool stall_detection;
 
-struct ad2s1210_state rdc;
-struct pid pid;
+static struct ad2s1210_state rdc;
+static struct pid pid;
 
+/**
+ * @brief 	handles the Pole movement.
+ * @param 	par		: unused
+ * @return	never
+ * @note	Receives commands from pole_queue
+ */
 static void pole_task(void *par)
 {
 	struct mot_pap_msg *msg_rcv;
 	int32_t error, threshold = 10;
 	bool already_there;
 	bool allowed, speed_ok;
+	enum mot_pap_direction dir;
 
 	ad2s1210_init(&rdc);
 
@@ -48,19 +53,27 @@ static void pole_task(void *par)
 
 				//obtener posición del RDC
 				status.posAct = ad2s1210_read_position(&rdc);
+				status.cwLimitReached = false;
+				status.ccwLimitReached = false;
 
-				if (status.posAct > MOT_PAP_CWLIMIT) {
-					status.cwLimit = true;
+				if (status.posAct >= (int32_t) status.cwLimit) {
+					status.cwLimitReached = true;
 				}
 
-				if (status.posAct < MOT_PAP_CCWLIMIT) {
-					status.ccwLimit = true;
+				if (status.posAct <= (int32_t) status.ccwLimit) {
+					status.ccwLimitReached = true;
 				}
+
+				lDebug(Info, "LIMITES ******************");
+				lDebug(Info, "posActual: %i ", status.posAct);
+				lDebug(Info, "cwLimitReached: %s ", status.cwLimitReached ? "TRUE" : "FALSE");
+				lDebug(Info, "ccwLimitReached: %s ", status.ccwLimitReached ? "TRUE" : "FALSE");
+				lDebug(Info, "LIMITES ******************");
 
 				switch (msg_rcv->type) {
 				case MOT_PAP_TYPE_FREE_RUNNING:
 					allowed = movement_allowed(msg_rcv->free_run_direction,
-							status.cwLimit, status.ccwLimit);
+							status.cwLimitReached, status.ccwLimitReached);
 					speed_ok = free_run_speed_ok(msg_rcv->free_run_speed);
 
 					if (allowed && speed_ok) {
@@ -95,8 +108,8 @@ static void pole_task(void *par)
 					break;
 
 				case MOT_PAP_TYPE_CLOSED_LOOP:	//PID
-					if ((msg_rcv->closed_loop_setpoint > MOT_PAP_CWLIMIT)
-							| (msg_rcv->closed_loop_setpoint < MOT_PAP_CCWLIMIT)) {
+					if ((msg_rcv->closed_loop_setpoint > status.cwLimit)
+							| (msg_rcv->closed_loop_setpoint < status.ccwLimit)) {
 						lDebug(Warn, "pole: movement out of bounds");
 					} else {
 						status.posCmd = msg_rcv->closed_loop_setpoint;
@@ -112,8 +125,8 @@ static void pole_task(void *par)
 							lDebug(Info, "pole: already there");
 						} else {
 							dir = direction_calculate(error);
-							if (movement_allowed(dir, status.cwLimit,
-									status.ccwLimit)) {
+							if (movement_allowed(dir, status.cwLimitReached,
+									status.ccwLimitReached)) {
 								if ((status.dir != msg_rcv->free_run_direction)
 										&& (status.type != MOT_PAP_TYPE_STOP)) {
 									pole_tmr_stop();
@@ -161,32 +174,37 @@ static void pole_task(void *par)
 	}
 }
 
+/**
+ * @brief	checks if soft limits are reached, if stalled and if position reached in closed loop.
+ * @param 	par	: unused
+ * @return	never
+ */
 static void supervisor_task(void *par)
 {
 	static uint16_t last_pos = 0;
 	int32_t error;
 	bool already_there;
-	enum mot_pap_direction;
+	enum mot_pap_direction dir;
 
 	while (1) {
 		xSemaphoreTake(pole_supervisor_semaphore, portMAX_DELAY);
 
 		status.posAct = ad2s1210_read_position(&rdc);
 
-		status.cwLimit = false;
-		status.ccwLimit = false;
+		status.cwLimitReached = false;
+		status.ccwLimitReached = false;
 
 		if ((status.dir == MOT_PAP_DIRECTION_CW)
-				&& (status.posAct > MOT_PAP_CWLIMIT)) {
-			status.cwLimit = true;
+				&& (status.posAct >= (int32_t) status.cwLimit)) {
+			status.cwLimitReached = true;
 			pole_tmr_stop();
 			lDebug(Warn, "pole: limit CW reached");
 			goto cont;
 		}
 
 		if ((status.dir == MOT_PAP_DIRECTION_CCW)
-				&& (status.posAct < MOT_PAP_CCWLIMIT)) {
-			status.ccwLimit = true;
+				&& (status.posAct <= (int32_t) status.ccwLimit)) {
+			status.ccwLimitReached = true;
 			pole_tmr_stop();
 			lDebug(Warn, "pole: limit CCW reached");
 			goto cont;
@@ -232,6 +250,10 @@ cont:
 	}
 }
 
+/**
+ * @brief 	creates the queues, semaphores and endless tasks to handle pole movements.
+ * @return	nothing
+ */
 void pole_init()
 {
 	pole_queue = xQueueCreate(5, sizeof(struct mot_pap_msg*));
@@ -239,11 +261,13 @@ void pole_init()
 	pid_controller_init(&pid, 10, 20, 20, 20, 100);
 
 	status.type = MOT_PAP_TYPE_STOP;
+	status.cwLimit = 65535;
+	status.ccwLimit = 0;
+	status.offset = 0;
 
 	rdc.gpios.reset = poncho_rdc_reset;
 	rdc.gpios.sample = poncho_rdc_sample;
 	rdc.gpios.wr_fsync = poncho_rdc_pole_wr_fsync;
-	rdc.lock = xSemaphoreCreateMutex();
 	rdc.resolution = 16;
 
 	pole_tmr_init();
@@ -264,6 +288,35 @@ void pole_init()
 	lDebug(Info, "pole: task created");
 }
 
+/**
+ * @brief	gets pole RDC position
+ * @return	RDC position
+ * @note 	uncorrected position (does not take offset into account)
+ */
+uint16_t pole_get_RDC_position()
+{
+	return ad2s1210_read_position(&rdc);
+}
+
+void pole_set_offset(uint16_t offset)
+{
+	status.offset = offset;
+}
+
+void pole_set_cwLimit(uint16_t pos)
+{
+	status.cwLimit = pos;
+}
+
+void pole_set_ccwLimit(uint16_t pos)
+{
+	status.ccwLimit = pos;
+}
+
+/**
+ * @brief	returns status of the pole task.
+ * @return 	copy of status structure of the task
+ */
 struct mot_pap_status pole_get_status(void)
 {
 	return status;

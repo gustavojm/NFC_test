@@ -19,9 +19,9 @@ extern GtkWidget *pole_rdc_scale;
 
 const uint32_t ad2s1210_resolution_value[] = { 10, 12, 14, 16 };
 
-int32_t spi_write(uint8_t *data, __attribute__((unused))     int32_t byte_count);
+int32_t spi_write(uint8_t *data, __attribute__((unused))      int32_t byte_count);
 int32_t spi_sync_transfer(Chip_SSP_DATA_SETUP_T *xfers,
-		__attribute__((unused))     int32_t byte_count);
+		__attribute__((unused))      int32_t byte_count);
 
 /* write 1 bytes (address or data) to the chip */
 int32_t ad2s1210_config_write(struct ad2s1210_state *st, uint8_t data)
@@ -105,19 +105,13 @@ int32_t ad2s1210_set_fclkin(struct ad2s1210_state *st, uint32_t fclkin)
 		return -EINVAL;
 	}
 
-	if (st->lock != NULL) {
-		if ( xSemaphoreTake( st->lock, portMAX_DELAY ) == pdTRUE) {
 
 //			st->fclkin = fclkin;
 //
 //			ret = ad2s1210_update_frequency_control_word(st);
 //			if (ret < 0)
-//				goto error_ret;
+//				return ret;
 //			ret = ad2s1210_soft_reset(st);
-//error_ret:
-			xSemaphoreGive(st->lock);
-		}
-	}
 	return ret;
 }
 
@@ -135,17 +129,11 @@ int32_t ad2s1210_set_fexcit(struct ad2s1210_state *st, uint32_t fexcit)
 		lDebug(Error, "ad2s1210: excitation frequency out of range");
 		return -EINVAL;
 	}
-	if (st->lock != NULL) {
-		if ( xSemaphoreTake(st->lock, portMAX_DELAY ) == pdTRUE) {
 //			st->fexcit = fexcit;
 //			ret = ad2s1210_update_frequency_control_word(st);
 //			if (ret < 0)
-//				goto error_ret;
+//				return ret;
 //			ret = ad2s1210_soft_reset(st);
-//error_ret:
-			xSemaphoreGive(st->lock);
-		}
-	}
 	return ret;
 }
 
@@ -153,12 +141,7 @@ int32_t ad2s1210_get_control(struct ad2s1210_state *st)
 {
 	int32_t ret = 0;
 
-	if (st->lock != NULL) {
-		if ( xSemaphoreTake(st->lock, portMAX_DELAY ) == pdTRUE) {
 //			ret = ad2s1210_config_read(st, AD2S1210_REG_CONTROL);
-			xSemaphoreGive(st->lock);
-		}
-	}
 	return ret;
 }
 
@@ -168,33 +151,26 @@ int32_t ad2s1210_set_control(struct ad2s1210_state *st, uint8_t udata)
 	uint8_t data;
 	int32_t ret = 0;
 
-	if (st->lock != NULL) {
-		if ( xSemaphoreTake(st->lock, portMAX_DELAY ) == pdTRUE) {
-
 //			ret = ad2s1210_config_write(st, AD2S1210_REG_CONTROL);
 //			if (ret < 0)
-//				goto error_ret;
+//				return ret;
 //			data = udata & AD2S1210_MSB_IS_LOW;
 //			ret = ad2s1210_config_write(st, data);
 //			if (ret < 0)
-//				goto error_ret;
+//				return ret;
 //
 //			ret = ad2s1210_config_read(st, AD2S1210_REG_CONTROL);
 //			if (ret < 0)
-//				goto error_ret;
+//				return ret;
 //			if (ret & AD2S1210_MSB_IS_HIGH) {
 //				ret = -EIO;
 //				lDebug(Error, "ad2s1210: write control register fail");
-//				goto error_ret;
+//				return ret;
 //			}
 //			st->resolution = ad2s1210_resolution_value[data
 //					& AD2S1210_SET_RESOLUTION];
 //			st->hysteresis = !!(data & AD2S1210_ENABLE_HYSTERESIS);
 //
-//error_ret:
-			xSemaphoreGive(st->lock);
-		}
-	}
 	return ret;
 }
 
@@ -214,8 +190,6 @@ int32_t ad2s1210_set_resolution(struct ad2s1210_state *st, uint8_t udata)
 		return -EINVAL;
 	}
 
-	if (st->lock != NULL) {
-		if ( xSemaphoreTake(st->lock, portMAX_DELAY ) == pdTRUE) {
 //			ret = ad2s1210_config_read(st, AD2S1210_REG_CONTROL);
 //			if (ret < 0)
 //				goto error_ret;
@@ -224,13 +198,13 @@ int32_t ad2s1210_set_resolution(struct ad2s1210_state *st, uint8_t udata)
 //			data |= (udata - 10) >> 1;
 //			ret = ad2s1210_config_write(st, AD2S1210_REG_CONTROL);
 //			if (ret < 0)
-//				goto error_ret;
+//				return ret;
 //			ret = ad2s1210_config_write(st, data & AD2S1210_MSB_IS_LOW);
 //			if (ret < 0)
-//				goto error_ret;
+//				return ret;
 //			ret = ad2s1210_config_read(st, AD2S1210_REG_CONTROL);
 //			if (ret < 0)
-//				goto error_ret;
+//				return ret;
 //			data = ret;
 //			if (data & AD2S1210_MSB_IS_HIGH) {
 //				ret = -EIO;
@@ -239,10 +213,6 @@ int32_t ad2s1210_set_resolution(struct ad2s1210_state *st, uint8_t udata)
 //			}
 //			st->resolution = ad2s1210_resolution_value[data
 //					& AD2S1210_SET_RESOLUTION];
-//error_ret:
-			xSemaphoreGive(st->lock);
-		}
-	}
 	return ret;
 }
 
@@ -251,13 +221,7 @@ int32_t ad2s1210_get_fault(struct ad2s1210_state *st)
 {
 	int32_t ret = 0;
 
-	if (st->lock != NULL) {
-		if ( xSemaphoreTake(st->lock, portMAX_DELAY ) == pdTRUE) {
-
-			ret = ad2s1210_config_read(st, AD2S1210_REG_FAULT);
-			xSemaphoreGive(st->lock);
-		}
-	}
+	ret = ad2s1210_config_read(st, AD2S1210_REG_FAULT);
 	return ret;
 }
 
@@ -265,23 +229,17 @@ int32_t ad2s1210_clear_fault(struct ad2s1210_state *st)
 {
 	int32_t ret = 0;
 
-	if (st->lock != NULL) {
-		if ( xSemaphoreTake(st->lock, portMAX_DELAY ) == pdTRUE) {
 //			st->gpios.sample(0);
 //			/* delay (2 * tck + 20) nano seconds */
 //			vTaskDelay(pdMS_TO_TICKS(0.02));
 //			st->gpios.sample(1);
 //			ret = ad2s1210_config_read(st, AD2S1210_REG_FAULT);
 //			if (ret < 0)
-//				goto error_ret;
+//				return ret;
 //
 //			st->gpios.sample(0);
 //			st->gpios.sample(1);
 //
-//error_ret:
-			xSemaphoreGive(st->lock);
-		}
-	}
 	return ret;
 }
 
@@ -289,12 +247,7 @@ int32_t ad2s1210_get_reg(struct ad2s1210_state *st, uint8_t address)
 {
 	int32_t ret = 0;
 
-	if (st->lock != NULL) {
-		if ( xSemaphoreTake(st->lock, portMAX_DELAY ) == pdTRUE) {
 //			ret = ad2s1210_config_read(st, address);
-			xSemaphoreGive(st->lock);
-		}
-	}
 	return ret;
 }
 
@@ -304,16 +257,10 @@ int32_t ad2s1210_set_reg(struct ad2s1210_state *st, uint8_t address,
 
 	int32_t ret = 0;
 
-	if (st->lock != NULL) {
-		if ( xSemaphoreTake(st->lock, portMAX_DELAY ) == pdTRUE) {
 //			ret = ad2s1210_config_write(st, address);
 //			if (ret < 0)
-//				goto error_ret;
+//				return ret;
 //			ret = ad2s1210_config_write(st, data & AD2S1210_MSB_IS_LOW);
-//error_ret:
-			xSemaphoreGive(st->lock);
-		}
-	}
 	return ret;
 }
 
@@ -322,35 +269,27 @@ int32_t ad2s1210_init(struct ad2s1210_state *st)
 	uint8_t data;
 	int32_t ret = 0;
 
-	if (st->lock != NULL) {
-		if ( xSemaphoreTake(st->lock, portMAX_DELAY ) == pdTRUE) {
-
 //			ret = ad2s1210_config_write(st, AD2S1210_REG_CONTROL);
 //			if (ret < 0)
-//				goto error_ret;
+//				return ret;
 //			data = AD2S1210_DEF_CONTROL & ~(AD2S1210_SET_RESOLUTION);
 //			data |= (st->resolution - 10) >> 1;
 //			ret = ad2s1210_config_write(st, data);
 //			if (ret < 0)
-//				goto error_ret;
+//				return ret;
 //			ret = ad2s1210_config_read(st, AD2S1210_REG_CONTROL);
 //			if (ret < 0)
-//				goto error_ret;
+//				return ret;
 //
 //			if (ret & AD2S1210_MSB_IS_HIGH) {
 //				ret = -EIO;
-//				goto error_ret;
+//				return ret;
 //			}
 //
 //			ret = ad2s1210_update_frequency_control_word(st);
 //			if (ret < 0)
-//				goto error_ret;
+//				return ret;
 //			ret = ad2s1210_soft_reset(st);
-//error_ret:
-			xSemaphoreGive(st->lock);
-			lDebug(Info, "AD2S1210 init");
-		}
-	}
 	return ret;
 }
 
@@ -358,15 +297,10 @@ uint16_t ad2s1210_read_position(struct ad2s1210_state *st)
 {
 	uint16_t ret = 0;
 
-	if (st->lock != NULL) {
-		if ( xSemaphoreTake(st->lock, portMAX_DELAY ) == pdTRUE) {
 			//ret = ad2s1210_config_read(st, AD2S1210_REG_POSITION);
 #ifdef TEST_GUI
 			ret = (uint16_t) gtk_range_get_value(GTK_RANGE(pole_rdc_scale));
 #endif
-			xSemaphoreGive(st->lock);
-		}
-	}
 	return ret;
 }
 
@@ -374,15 +308,9 @@ int16_t ad2s1210_read_velocity(struct ad2s1210_state *st)
 {
 	int16_t ret = 0;
 
-	if (st->lock != NULL) {
-		if ( xSemaphoreTake(st->lock, portMAX_DELAY ) == pdTRUE) {
 //			ret = ad2s1210_config_read(st, AD2S1210_REG_VELOCITY);
-			xSemaphoreGive(st->lock);
-		}
-	}
 	return ret;
 }
-
 
 //Truncar a la resolución configurada
 //if (st->hysteresis)

@@ -1,8 +1,9 @@
 #include <gtk/gtk.h>
 #include <sys/times.h>
-#include "gui.h"
+
 #include "FreeRTOS.h"
 #include "task.h"
+#include "gui.h"
 #include "debug.h"
 #include "pole.h"
 #include "queue.h"
@@ -53,7 +54,7 @@ void msg_send(void *msg, enum dest dest)
 			(TickType_t) 10) == pdPASS) {
 		lDebug(Info, "gui: command sent");
 	} else {
-		lDebug(Warn, "gui: unable to send pole command");
+		lDebug(Warn, "gui: unable to send command");
 	}
 }
 
@@ -74,13 +75,14 @@ void gui_task(void *args)
 	pole_direction_label = GTK_WIDGET(
 			gtk_builder_get_object(builder, "pole_direction_label"));
 
-	GtkWidget * pole_free_run_speed_scale = GTK_WIDGET(
+	GtkWidget *pole_free_run_speed_scale = GTK_WIDGET(
 			gtk_builder_get_object(builder, "pole_free_run_speed_scale"));
 
-	for (int i=0; i<9; i++) {
+	for (int i = 0; i < 9; i++) {
 		char v[3];
 		sprintf(v, "%i", i);
-		gtk_scale_add_mark (GTK_SCALE (pole_free_run_speed_scale), i, GTK_POS_RIGHT, v);
+		gtk_scale_add_mark(GTK_SCALE(pole_free_run_speed_scale), i,
+				GTK_POS_RIGHT, v);
 	}
 	pole_rdc_scale = GTK_WIDGET(
 			gtk_builder_get_object(builder, "pole_rdc_scale"));
@@ -180,8 +182,37 @@ void on_pole_free_run_ccw_button_event(GtkWidget *widget, GdkEventButton *event,
 	}
 }
 
-void on_pole_stop_button_event(GtkWidget *widget,
+void draw_limits(gpointer scale)
+{
+	gtk_scale_clear_marks(GTK_SCALE(scale));
+
+	gtk_scale_add_mark(GTK_SCALE(scale), pole_get_status().cwLimit, GTK_POS_TOP,
+			"cwLimit");
+
+	gtk_scale_add_mark(GTK_SCALE(scale), pole_get_status().ccwLimit,
+			GTK_POS_TOP, "ccwLimit");
+}
+
+void on_pole_set_cwLimit_button_press_event(GtkWidget *widget,
 		GdkEventButton *event, gpointer user_data)
+{
+	uint16_t pos = pole_get_RDC_position();
+	pole_set_cwLimit(pos);
+	draw_limits(user_data);
+	lDebug(Info, "gui: Pole cwLimit set to %u", pole_get_status().cwLimit);
+}
+
+void on_pole_set_ccwLimit_button_press_event(GtkWidget *widget,
+		GdkEventButton *event, gpointer user_data)
+{
+	uint16_t pos = pole_get_RDC_position();
+	pole_set_ccwLimit(pos);
+	draw_limits(user_data);
+	lDebug(Info, "gui: Pole ccwLimit set to %u", pole_get_status().ccwLimit);
+}
+
+void on_pole_stop_button_event(GtkWidget *widget, GdkEventButton *event,
+		gpointer user_data)
 {
 	struct mot_pap_msg *pole_msg_snd;
 	pole_msg_snd = (struct mot_pap_msg*) malloc(sizeof(struct mot_pap_msg));
@@ -275,7 +306,7 @@ void on_lift_bajar_toggle_toggled(GtkWidget *button, GdkEventButton *event,
 
 void on_lift_upLimit_toggled(GtkToggleButton *togglebutton, gpointer user_data)
 {
-	if (gtk_toggle_button_get_active(togglebutton)) { //simulate falling edge
+	if (gtk_toggle_button_get_active(togglebutton)) { //simulate rising edge
 		GPIO0_IRQHandler();
 	}
 }
@@ -283,7 +314,7 @@ void on_lift_upLimit_toggled(GtkToggleButton *togglebutton, gpointer user_data)
 void on_lift_downLimit_toggled(GtkToggleButton *togglebutton,
 		gpointer user_data)
 {
-	if (gtk_toggle_button_get_active(togglebutton)) { //simulate falling edge
+	if (gtk_toggle_button_get_active(togglebutton)) { //simulate rising edge
 		GPIO1_IRQHandler();
 	}
 }

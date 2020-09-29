@@ -3,7 +3,8 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include <mot_pap.h>
+
+#include "mot_pap.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -12,6 +13,14 @@ extern "C" {
 void pole_init();
 
 struct mot_pap_status pole_get_status(void);
+
+uint16_t pole_get_RDC_position();
+
+void pole_set_offset(uint16_t offset);
+
+void pole_set_cwLimit(uint16_t pos);
+
+void pole_set_ccwLimit(uint16_t pos);
 
 #ifdef __cplusplus
 }

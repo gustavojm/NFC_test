@@ -1,16 +1,15 @@
 #ifndef MOT_PAP_H_
 #define MOT_PAP_H_
 
-#include "stdint.h"
-#include "stdbool.h"
+#include <stdint.h>
+#include <stdbool.h>
+
 #include "pid.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define MOT_PAP_CWLIMIT 						5000
-#define MOT_PAP_CCWLIMIT 						5
 #define MOT_PAP_MAX_FREQ						150000
 #define MOT_PAP_MIN_FREQ						100
 #define MOT_PAP_CLOSED_LOOP_FREQ_MULTIPLIER  	( MOT_PAP_MAX_FREQ / 100 )
@@ -34,6 +33,10 @@ enum mot_pap_type {
 	MOT_PAP_TYPE_STOP
 };
 
+/**
+ * @struct 	mot_pap_msg
+ * @brief	messages to POLE or ARM tasks.
+ */
 struct mot_pap_msg {
 	bool ctrlEn;
 	enum mot_pap_type type;
@@ -42,14 +45,21 @@ struct mot_pap_msg {
 	uint16_t closed_loop_setpoint;
 };
 
+/**
+ * @struct 	mot_pap_status
+ * @brief	POLE or ARM task status.
+ */
 struct mot_pap_status {
 	enum mot_pap_type type;
 	enum mot_pap_direction dir;
+	uint16_t offset;
 	uint16_t posCmd;
-	uint16_t posAct;
+	int32_t  posAct;
 	uint32_t freq;
-	volatile bool cwLimit;
-	volatile bool ccwLimit;
+	uint16_t cwLimit;
+	uint16_t ccwLimit;
+	volatile bool cwLimitReached;
+	volatile bool ccwLimitReached;
 	volatile bool stalled;
 };
 
@@ -71,6 +81,7 @@ bool cwLimitReached, bool ccwLimitReached)
 }
 
 int32_t freq_calculate(struct pid *pid, uint32_t setpoint, uint32_t pos);
+
 
 #ifdef __cplusplus
 }

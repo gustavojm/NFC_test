@@ -53,7 +53,6 @@ struct ad2s1210_gpios {
 };
 
 struct ad2s1210_state {
-	SemaphoreHandle_t lock;
 	struct ad2s1210_gpios gpios;
 	uint32_t fclkin;
 	uint32_t fexcit;
