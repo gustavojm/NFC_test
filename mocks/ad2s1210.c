@@ -51,6 +51,7 @@ int32_t ad2s1210_config_read(struct ad2s1210_state *st, uint8_t address)
 //		return ret;
 //
 //	return st->rx[1];
+	return 0;
 }
 
 int32_t ad2s1210_update_frequency_control_word(struct ad2s1210_state *st)
@@ -69,6 +70,7 @@ int32_t ad2s1210_update_frequency_control_word(struct ad2s1210_state *st)
 //		return ret;
 //
 //	return ad2s1210_config_write(st, fcw);
+	return 0;
 }
 
 int32_t ad2s1210_soft_reset(struct ad2s1210_state *st)
@@ -80,6 +82,7 @@ int32_t ad2s1210_soft_reset(struct ad2s1210_state *st)
 //		return ret;
 //
 //	return ad2s1210_config_write(st, 0x0);
+	return 0;
 }
 
 void ad2s1210_hard_reset(struct ad2s1210_state *st)
@@ -148,7 +151,7 @@ int32_t ad2s1210_get_control(struct ad2s1210_state *st)
 int32_t ad2s1210_set_control(struct ad2s1210_state *st, uint8_t udata)
 {
 
-	uint8_t data;
+//	uint8_t data;
 	int32_t ret = 0;
 
 //			ret = ad2s1210_config_write(st, AD2S1210_REG_CONTROL);
@@ -182,7 +185,7 @@ uint8_t ad2s1210_get_resolution(struct ad2s1210_state *st)
 
 int32_t ad2s1210_set_resolution(struct ad2s1210_state *st, uint8_t udata)
 {
-	uint8_t data;
+//	uint8_t data;
 	int32_t ret = 0;
 
 	if (udata < 10 || udata > 16) {
@@ -266,7 +269,7 @@ int32_t ad2s1210_set_reg(struct ad2s1210_state *st, uint8_t address,
 
 int32_t ad2s1210_init(struct ad2s1210_state *st)
 {
-	uint8_t data;
+//	uint8_t data;
 	int32_t ret = 0;
 
 //			ret = ad2s1210_config_write(st, AD2S1210_REG_CONTROL);

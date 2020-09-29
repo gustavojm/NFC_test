@@ -16,8 +16,6 @@ struct mot_pap_status pole_get_status(void);
 
 uint16_t pole_get_RDC_position();
 
-void pole_set_offset(uint16_t offset);
-
 void pole_set_cwLimit(uint16_t pos);
 
 void pole_set_ccwLimit(uint16_t pos);
@@ -27,3 +25,4 @@ void pole_set_ccwLimit(uint16_t pos);
 #endif
 
 #endif /* POLE_H_ */
+;
