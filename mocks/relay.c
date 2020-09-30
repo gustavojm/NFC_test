@@ -23,13 +23,13 @@ void relay_lift_dir(enum lift_direction dir)
 {
 	if (dir == LIFT_DIRECTION_UP) {
 //		Chip_GPIO_SetPinOutHigh(LPC_GPIO_PORT, 2, 4);
+		gui_lift_dir_handler(dir);
 #ifdef TEST_GUI
-		gtk_label_set_text(GTK_LABEL(lift_dir_label), "Subiendo");
 #endif
 	} else {
 //		Chip_GPIO_SetPinOutLow(LPC_GPIO_PORT, 2, 4);
+		gui_lift_dir_handler(dir);
 #ifdef TEST_GUI
-		gtk_label_set_text(GTK_LABEL(lift_dir_label), "Bajando");
 #endif
 	}
 }
@@ -39,12 +39,12 @@ void relay_lift_pwr(bool state)
 	if (state) {
 //		Chip_GPIO_SetPinOutHigh(LPC_GPIO_PORT, 2, 5);
 #ifdef TEST_GUI
-	gtk_label_set_text(GTK_LABEL(lift_motor_label), "Activado");
+		gui_lift_pwr_handler(state);
 #endif
 	} else {
 //		Chip_GPIO_SetPinOutLow(LPC_GPIO_PORT, 2, 5);
 #ifdef TEST_GUI
-	gtk_label_set_text(GTK_LABEL(lift_motor_label), "Desactivado");
+		gui_lift_pwr_handler(state);
 #endif
 	}
 }

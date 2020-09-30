@@ -302,7 +302,8 @@ uint16_t ad2s1210_read_position(struct ad2s1210_state *st)
 
 			//ret = ad2s1210_config_read(st, AD2S1210_REG_POSITION);
 #ifdef TEST_GUI
-			ret = (uint16_t) gtk_range_get_value(GTK_RANGE(pole_rdc_scale));
+			//ret = (uint16_t) gtk_range_get_value(GTK_RANGE(pole_rdc_scale));
+		ret = gui_pole_cur_pos();
 #endif
 	return ret;
 }

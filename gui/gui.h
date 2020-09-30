@@ -1,11 +1,19 @@
-#include "stdbool.h"
+#include <stdbool.h>
 
-//int gui_main(int argc, char *argv[]);
+#include "lift.h"
+#include "mot_pap.h"
 
 void gui_task(void * args);
 
 void gui_init(void);
 
-void on_NFC_test_main_window_destroy();
+void gui_pole_dir_handler(enum mot_pap_direction dir);
 
-void pole_pulse_handler(bool state);
+void gui_pole_pulse_handler(bool state);
+
+uint16_t gui_pole_cur_pos();
+
+void gui_lift_dir_handler(enum lift_direction dir);
+
+void gui_lift_pwr_handler(bool state);
+

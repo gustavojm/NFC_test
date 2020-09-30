@@ -21,6 +21,7 @@
   </object>
   <object class="GtkWindow" id="NFC_test_main_window">
     <property name="can_focus">False</property>
+    <signal name="destroy" handler="on_window_main_destroy" swapped="no"/>
     <child>
       <object class="GtkNotebook" id="notebook1">
         <property name="visible">True</property>
@@ -214,6 +215,7 @@
                 <property name="digits">0</property>
                 <property name="has_origin">False</property>
                 <property name="value_pos">bottom</property>
+                <signal name="value-changed" handler="on_pole_rdc_scale_value_changed" swapped="no"/>
               </object>
               <packing>
                 <property name="x">37</property>

@@ -65,5 +65,6 @@ int32_t spi_init(void)
 //	Chip_SSP_Enable(LPC_SSP);
 
 //	Chip_SSP_SetMaster(LPC_SSP, 1);
+	return 0;
 
 }

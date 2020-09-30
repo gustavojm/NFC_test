@@ -25,6 +25,15 @@ GtkWidget *lift_motor_label;
 GtkWidget *lift_upLimit;
 GtkWidget *lift_downLimit;
 
+GMainContext *context;
+
+static enum mot_pap_direction pole_dir = MOT_PAP_DIRECTION_CW;
+static bool pole_pulse;
+static uint16_t pole_cur_pos = 0;
+static bool lift_pwr_state;
+static enum lift_direction lift_dir;
+
+
 enum dest {
 	Pole, Arm, Lift
 };
@@ -56,6 +65,37 @@ void msg_send(void *msg, enum dest dest)
 	} else {
 		lDebug(Warn, "gui: unable to send command");
 	}
+}
+
+static gboolean update_ui()
+{
+	gtk_range_set_value(GTK_RANGE(pole_rdc_scale), pole_cur_pos);
+
+	if (pole_pulse) {
+		gtk_label_set_text(GTK_LABEL(pole_pulse_label), "ON");
+	} else {
+		gtk_label_set_text(GTK_LABEL(pole_pulse_label), "OFF");
+	}
+
+	if (pole_dir == MOT_PAP_DIRECTION_CW) {
+		gtk_label_set_text(GTK_LABEL(pole_direction_label), "CW");
+	} else {
+		gtk_label_set_text(GTK_LABEL(pole_direction_label), "CCW");
+	}
+
+	if (lift_pwr_state) {
+		gtk_label_set_text(GTK_LABEL(lift_motor_label), "Activado");
+	} else {
+		gtk_label_set_text(GTK_LABEL(lift_motor_label), "Desactivado");
+	}
+
+	if (lift_dir == LIFT_DIRECTION_UP) {
+		gtk_label_set_text(GTK_LABEL(lift_dir_label), "Subiendo");
+	} else {
+		gtk_label_set_text(GTK_LABEL(lift_dir_label), "Bajando");
+	}
+
+	return G_SOURCE_CONTINUE;
 }
 
 void gui_task(void *args)
@@ -100,7 +140,17 @@ void gui_task(void *args)
 
 	g_object_unref(builder);
 
+	context = g_main_context_default();
+
+	GSource *source;
+
+	source = g_idle_source_new();
+	g_source_set_callback(source, update_ui, NULL, NULL);
+	g_source_attach(source, context);
+	g_source_unref(source);
+
 	gtk_widget_show(window);
+
 	gtk_main();
 
 	return;
@@ -116,9 +166,44 @@ void gui_init(void)
 	lDebug(Info, "Gui: task created");
 }
 
+// called when window is closed
+void on_window_main_destroy()
+{
+	gtk_main_quit();
+	exit(0);
+}
+
 /*
  * Pole Handlers
  */
+
+void gui_pole_dir_handler(enum mot_pap_direction dir)
+{
+	pole_dir = dir;
+}
+
+void gui_pole_pulse_handler(bool state)
+{
+	pole_pulse = state;
+	if (pole_pulse) {
+		if (pole_dir == MOT_PAP_DIRECTION_CW) {
+			pole_cur_pos++;
+		} else {
+			pole_cur_pos--;
+		}
+	}
+}
+
+uint16_t gui_pole_cur_pos()
+{
+	return pole_cur_pos;
+}
+
+void on_pole_rdc_scale_value_changed(GtkWidget *widget, gpointer user_data)
+{
+	pole_cur_pos = (uint16_t) gtk_range_get_value(GTK_RANGE(widget));
+//	gtk_range_set_value(GTK_RANGE(widget), pole_cur_pos);
+}
 
 void on_pole_close_loop_button_press_event(GtkWidget *widget,
 		GdkEventButton *event, gpointer user_data)
@@ -230,6 +315,16 @@ void on_pole_stop_button_event(GtkWidget *widget, GdkEventButton *event,
  * Lift Handlers
  */
 
+void gui_lift_dir_handler(enum lift_direction dir)
+{
+	lift_dir = dir;
+}
+
+void gui_lift_pwr_handler(bool state)
+{
+	lift_pwr_state = state;
+}
+
 void on_lift_subir_button_event(GtkWidget *widget, GdkEventButton *event,
 		gpointer user_data)
 {
@@ -318,28 +413,3 @@ void on_lift_downLimit_toggled(GtkToggleButton *togglebutton,
 		GPIO1_IRQHandler();
 	}
 }
-
-void pole_pulse_handler(bool state)
-{
-	uint16_t cur_pos = 0;
-	const char *dir;
-	if (state) {
-		gtk_label_set_text(GTK_LABEL(pole_pulse_label), "ON");
-		dir = gtk_label_get_text(GTK_LABEL(pole_direction_label));
-		if (strcmp(dir, "CW") == 0) {
-			cur_pos = (uint16_t) gtk_range_get_value(GTK_RANGE(pole_rdc_scale));
-			cur_pos++;
-			gtk_range_set_value(GTK_RANGE(pole_rdc_scale), cur_pos);
-		}
-
-		if (strcmp(dir, "CCW") == 0) {
-			cur_pos = (uint16_t) gtk_range_get_value(GTK_RANGE(pole_rdc_scale));
-			cur_pos--;
-			gtk_range_set_value(GTK_RANGE(pole_rdc_scale), cur_pos);
-		}
-
-	} else {
-		gtk_label_set_text(GTK_LABEL(pole_pulse_label), "OFF");
-	}
-}
-

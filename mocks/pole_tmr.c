@@ -15,7 +15,7 @@ extern SemaphoreHandle_t pole_supervisor_semaphore;
 
 static void pole_tmr_callback(TimerHandle_t tmr_handle)
 {
-	uint32_t static steps = 0;
+	static uint32_t steps = 0;
 	static bool On = false;
 	BaseType_t xHigherPriorityTaskWoken;
 	static enum mot_pap_direction last_dir = MOT_PAP_DIRECTION_CW;
@@ -48,7 +48,7 @@ void pole_tmr_init(void)
 			pole_tmr_callback);
 }
 
-int32_t pole_tmr_set_freq(int32_t tick_rate_hz)
+int32_t pole_tmr_set_freq(uint32_t tick_rate_hz)
 {
 	int32_t period = (int32_t) ((1.f / tick_rate_hz) * 4000000);
 	if ( xTimerChangePeriod( pole_tmr, pdMS_TO_TICKS(period), 100 ) == pdPASS) {
