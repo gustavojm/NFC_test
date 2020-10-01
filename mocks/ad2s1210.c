@@ -1,15 +1,10 @@
-#include "ad2s1210.h"
-#include <stdio.h>
 #include <stdint.h>
 #include <errno.h>
-#include "semphr.h"
-#include "FreeRTOS.h"
-#include "task.h"
-#include "spi.h"
-#include "debug.h"
-#include "gtk/gtk.h"
 
-extern GtkWidget *pole_rdc_scale;
+#include "board.h"
+#include "ad2s1210.h"
+#include "debug.h"
+#include "gui.h"
 
 //xf_setup.length = BUFFER_SIZE;
 //xf_setup.tx_data = Tx_Buf;
@@ -302,7 +297,6 @@ uint16_t ad2s1210_read_position(struct ad2s1210_state *st)
 
 			//ret = ad2s1210_config_read(st, AD2S1210_REG_POSITION);
 #ifdef TEST_GUI
-			//ret = (uint16_t) gtk_range_get_value(GTK_RANGE(pole_rdc_scale));
 		ret = gui_pole_cur_pos();
 #endif
 	return ret;

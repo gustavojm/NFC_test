@@ -1,12 +1,12 @@
-#include "stdint.h"
+#include <stdint.h>
+#include <stdbool.h>
+
 #include "FreeRTOS.h"
 #include "timers.h"
 #include "semphr.h"
-#include "stdbool.h"
 #include "dout.h"
 #include "pole.h"
 #include "debug.h"
-#include "pole.h"
 
 #define POLE_SUPERVISOR_RATE    2		//2 calls to interrupt generates one pulse = one step
 

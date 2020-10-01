@@ -1,9 +1,8 @@
 #ifndef AD2S1210_H_
 #define AD2S1210_H_
 
-#include "stdint.h"
-#include "FreeRTOS.h"
-#include "semphr.h"
+#include <stdint.h>
+
 #include "poncho_rdc.h"
 
 #ifdef __cplusplus
@@ -12,14 +11,14 @@ extern "C" {
 
 #define AD2S1210_DEF_CONTROL			0x7E
 
-#define AD2S1210_MSB_MASK			1 << 7
+#define AD2S1210_MSB_MASK				1 << 7
 #define AD2S1210_MSB_IS_LOW				~(1 << 7)
 #define AD2S1210_PHASE_LOCK_RANGE_44	1 << 5
-#define AD2S1210_HYSTERESIS		1 << 4
+#define AD2S1210_HYSTERESIS				1 << 4
 #define AD2S1210_SET_ENRES1				1 << 3
 #define AD2S1210_SET_ENRES0				1 << 2
-#define AD2S1210_RES1				1 << 1
-#define AD2S1210_RES0				1 << 0
+#define AD2S1210_RES1					1 << 1
+#define AD2S1210_RES0					1 << 0
 
 #define AD2S1210_RESOLUTION_MASK		(AD2S1210_RES1 | AD2S1210_RES0)
 

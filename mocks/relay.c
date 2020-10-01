@@ -1,15 +1,10 @@
-#include "stdio.h"
-#include "stdlib.h"
-#include "stdbool.h"
-#include "board.h"
+#include <stdbool.h>
+
 #include "relay.h"
 #include "lift.h"
 
 #ifdef TEST_GUI
-#include "gtk/gtk.h"
-
-extern GtkWidget *lift_dir_label;
-extern GtkWidget *lift_motor_label;
+#include "gui.h"
 #endif
 
 void relay_init()
@@ -23,13 +18,13 @@ void relay_lift_dir(enum lift_direction dir)
 {
 	if (dir == LIFT_DIRECTION_UP) {
 //		Chip_GPIO_SetPinOutHigh(LPC_GPIO_PORT, 2, 4);
-		gui_lift_dir_handler(dir);
 #ifdef TEST_GUI
+		gui_lift_dir_handler(dir);
 #endif
 	} else {
 //		Chip_GPIO_SetPinOutLow(LPC_GPIO_PORT, 2, 4);
-		gui_lift_dir_handler(dir);
 #ifdef TEST_GUI
+		gui_lift_dir_handler(dir);
 #endif
 	}
 }

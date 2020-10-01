@@ -1,7 +1,5 @@
-#include "stdio.h"
-#include "stdbool.h"
-#include "board.h"
-#include "gtk/gtk.h"
+#include <stdbool.h>
+#include <gtk/gtk.h>
 
 //DIN0 P4_0 	PIN1  	GPIO2[0]	ZS1_LIFT
 #define ZS1_LIFT_GPIO_PORT	2

@@ -354,13 +354,12 @@
                 <property name="orientation">vertical</property>
                 <property name="layout_style">start</property>
                 <child>
-                  <object class="GtkButton" id="lift_subir">
+                  <object class="GtkToggleButton" id="lift_subir_toggle">
                     <property name="label" translatable="yes">subir</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <signal name="button-press-event" handler="on_lift_subir_button_event" swapped="no"/>
-                    <signal name="button-release-event" handler="on_lift_subir_button_event" swapped="no"/>
+                    <signal name="toggled" handler="on_lift_subir_toggle_toggled" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">True</property>
@@ -369,12 +368,13 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkToggleButton" id="lift_subir_toggle">
+                  <object class="GtkButton" id="lift_subir">
                     <property name="label" translatable="yes">subir</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <signal name="toggled" handler="on_lift_subir_toggle_toggled" swapped="no"/>
+                    <signal name="button-press-event" handler="on_lift_subir_button_event" swapped="no"/>
+                    <signal name="button-release-event" handler="on_lift_subir_button_event" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">True</property>

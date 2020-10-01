@@ -32,7 +32,7 @@
 #ifndef __RGU_18XX_43XX_H_
 #define __RGU_18XX_43XX_H_
 
-#include "stdbool.h"
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {

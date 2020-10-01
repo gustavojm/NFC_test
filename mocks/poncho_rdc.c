@@ -1,7 +1,4 @@
-#include "stdio.h"
-#include "stdlib.h"
-#include "stdbool.h"
-#include "board.h"
+#include <stdbool.h>
 
 void poncho_rdc_init()
 {

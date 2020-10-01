@@ -1,5 +1,7 @@
+#include <stdbool.h>
+#include <stdio.h>
+
 #include "board.h"
-#include "stdio.h"
 #include "spi.h"
 
 /*****************************************************************************

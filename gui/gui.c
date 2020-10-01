@@ -161,9 +161,9 @@ void gui_init(void)
 	struct tms time;
 	srandom(times(&time));
 
-	xTaskCreate(gui_task, "Gui", configMINIMAL_STACK_SIZE, NULL, 3, NULL);
+	xTaskCreate(gui_task, "GUI", configMINIMAL_STACK_SIZE, NULL, 3, NULL);
 
-	lDebug(Info, "Gui: task created");
+	lDebug(Info, "gui: task created");
 }
 
 // called when window is closed
