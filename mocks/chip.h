@@ -264,6 +264,10 @@ typedef struct {			/*!< PIN_INT Structure */
 
 #define LPC_GPIO_PIN_INT          ((LPC_PIN_INT_T          *) NULL)
 
+#define LPC_TIMER0				  ((LPC_TIMER_T            *) NULL)
+
+#define	TIMER0_IRQn                         12			/*!<  12  TIMER0                           */
+
 #define PININTCH(ch)      (1 << (ch))
 
 /**

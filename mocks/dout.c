@@ -29,11 +29,6 @@ void dout_arm_dir(bool dir)
 
 void dout_arm_pulse(bool state)
 {
-//	if (state) {
-//		Chip_GPIO_SetPinOutHigh(LPC_GPIO_PORT, 5, 13);
-//	} else {
-//		Chip_GPIO_SetPinOutLow(LPC_GPIO_PORT, 5, 13);
-//	}
 }
 
 void dout_pole_dir(enum mot_pap_direction dir)
@@ -54,17 +49,9 @@ void dout_pole_dir(enum mot_pap_direction dir)
 	}
 }
 
-void dout_pole_pulse(bool state)
+void dout_pole_pulse(void)
 {
-	if (state) {
-//		Chip_GPIO_SetPinOutHigh(LPC_GPIO_PORT, 0, 8);
 #ifdef TEST_GUI
-		gui_pole_pulse_handler(state);
+		gui_pole_pulse_handler();
 #endif
-	} else {
-//		Chip_GPIO_SetPinOutLow(LPC_GPIO_PORT, 0, 8);
-#ifdef TEST_GUI
-		gui_pole_pulse_handler(state);
-#endif
-	}
 }

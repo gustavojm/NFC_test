@@ -51,7 +51,7 @@ struct ad2s1210_gpios {
 	void (*reset)(bool);
 };
 
-struct ad2s1210_state {
+struct ad2s1210 {
 	struct ad2s1210_gpios gpios;
 	uint32_t fclkin;
 	uint32_t fexcit;
@@ -62,47 +62,47 @@ struct ad2s1210_state {
 };
 
 /* write 1 bytes (address or data) to the chip */
-int32_t ad2s1210_config_write(struct ad2s1210_state *st, uint8_t data);
+int32_t ad2s1210_config_write(struct ad2s1210 *st, uint8_t data);
 
 /* read value from one of the registers */
-int32_t ad2s1210_config_read(struct ad2s1210_state *st, uint8_t address);
+int32_t ad2s1210_config_read(struct ad2s1210 *st, uint8_t address);
 
-int32_t ad2s1210_update_frequency_control_word(struct ad2s1210_state *st);
+int32_t ad2s1210_update_frequency_control_word(struct ad2s1210 *st);
 
-int32_t ad2s1210_soft_reset(struct ad2s1210_state *st);
+int32_t ad2s1210_soft_reset(struct ad2s1210 *st);
 
-void ad2s1210_hard_reset(struct ad2s1210_state *st);
+void ad2s1210_hard_reset(struct ad2s1210 *st);
 
-uint32_t ad2s1210_get_fclkin(struct ad2s1210_state *st);
+uint32_t ad2s1210_get_fclkin(struct ad2s1210 *st);
 
-int32_t ad2s1210_set_fclkin(struct ad2s1210_state *st, uint32_t fclkin);
+int32_t ad2s1210_set_fclkin(struct ad2s1210 *st, uint32_t fclkin);
 
-uint32_t ad2s1210_get_fexcit(struct ad2s1210_state *st);
+uint32_t ad2s1210_get_fexcit(struct ad2s1210 *st);
 
-int32_t ad2s1210_set_fexcit(struct ad2s1210_state *st, uint32_t fexcit);
+int32_t ad2s1210_set_fexcit(struct ad2s1210 *st, uint32_t fexcit);
 
-int32_t ad2s1210_get_control(struct ad2s1210_state *st);
+int32_t ad2s1210_get_control(struct ad2s1210 *st);
 
-int32_t ad2s1210_set_control(struct ad2s1210_state *st, uint8_t udata);
+int32_t ad2s1210_set_control(struct ad2s1210 *st, uint8_t udata);
 
-uint8_t ad2s1210_get_resolution(struct ad2s1210_state *st);
+uint8_t ad2s1210_get_resolution(struct ad2s1210 *st);
 
-int32_t ad2s1210_set_resolution(struct ad2s1210_state *st, uint8_t udata);
+int32_t ad2s1210_set_resolution(struct ad2s1210 *st, uint8_t udata);
 
 /* read the fault register since last sample */
-int32_t ad2s1210_get_fault(struct ad2s1210_state *st);
+int32_t ad2s1210_get_fault(struct ad2s1210 *st);
 
-int32_t ad2s1210_clear_fault(struct ad2s1210_state *st);
+int32_t ad2s1210_clear_fault(struct ad2s1210 *st);
 
-int32_t ad2s1210_get_reg(struct ad2s1210_state *st, uint8_t address);
+int32_t ad2s1210_get_reg(struct ad2s1210 *st, uint8_t address);
 
-int32_t ad2s1210_set_reg(struct ad2s1210_state *st, uint8_t address, uint8_t data);
+int32_t ad2s1210_set_reg(struct ad2s1210 *st, uint8_t address, uint8_t data);
 
-int32_t ad2s1210_init(struct ad2s1210_state *st);
+int32_t ad2s1210_init(struct ad2s1210 *st);
 
-uint16_t ad2s1210_read_position(struct ad2s1210_state *st);
+uint16_t ad2s1210_read_position(struct ad2s1210 *st);
 
-int16_t ad2s1210_read_velocity(struct ad2s1210_state *st);
+int16_t ad2s1210_read_velocity(struct ad2s1210 *st);
 
 #ifdef __cplusplus
 }

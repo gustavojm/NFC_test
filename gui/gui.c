@@ -16,7 +16,6 @@ extern QueueHandle_t pole_queue;
 //extern QueueHandle_t arm_queue;
 extern QueueHandle_t lift_queue;
 
-GtkWidget *ctrlEn;
 GtkWidget *pole_direction_label;
 GtkWidget *pole_pulse_label;
 GtkWidget *pole_rdc_scale;
@@ -111,7 +110,6 @@ void gui_task(void *args)
 	window = GTK_WIDGET(
 			gtk_builder_get_object(builder, "NFC_test_main_window"));
 
-	ctrlEn = GTK_WIDGET(gtk_builder_get_object(builder, "ctrlEn"));
 	pole_direction_label = GTK_WIDGET(
 			gtk_builder_get_object(builder, "pole_direction_label"));
 
@@ -182,9 +180,9 @@ void gui_pole_dir_handler(enum mot_pap_direction dir)
 	pole_dir = dir;
 }
 
-void gui_pole_pulse_handler(bool state)
+void gui_pole_pulse_handler(void)
 {
-	pole_pulse = state;
+	pole_pulse = (bool) !pole_pulse;
 	if (pole_pulse) {
 		if (pole_dir == MOT_PAP_DIRECTION_CW) {
 			pole_cur_pos++;
@@ -194,7 +192,7 @@ void gui_pole_pulse_handler(bool state)
 	}
 }
 
-uint16_t gui_pole_cur_pos()
+uint16_t gui_pole_cur_pos(void)
 {
 	return pole_cur_pos;
 }
@@ -213,8 +211,6 @@ void on_pole_close_loop_button_press_event(GtkWidget *widget,
 	struct mot_pap_msg *pole_msg_snd;
 	pole_msg_snd = (struct mot_pap_msg*) malloc(sizeof(struct mot_pap_msg));
 	if (pole_msg_snd != NULL) {
-		pole_msg_snd->ctrlEn = gtk_toggle_button_get_active(
-				GTK_TOGGLE_BUTTON(ctrlEn));
 		pole_msg_snd->type = MOT_PAP_TYPE_CLOSED_LOOP;
 		pole_msg_snd->closed_loop_setpoint = position;
 		msg_send(pole_msg_snd, Pole);
@@ -231,8 +227,6 @@ void on_pole_free_run_cw_button_event(GtkWidget *widget, GdkEventButton *event,
 	struct mot_pap_msg *pole_msg_snd;
 	pole_msg_snd = (struct mot_pap_msg*) malloc(sizeof(struct mot_pap_msg));
 	if (pole_msg_snd != NULL) {
-		pole_msg_snd->ctrlEn = gtk_toggle_button_get_active(
-				GTK_TOGGLE_BUTTON(ctrlEn));
 		if (event->type == GDK_BUTTON_PRESS)
 			pole_msg_snd->type = MOT_PAP_TYPE_FREE_RUNNING;
 		if (event->type == GDK_BUTTON_RELEASE)
@@ -253,8 +247,6 @@ void on_pole_free_run_ccw_button_event(GtkWidget *widget, GdkEventButton *event,
 	struct mot_pap_msg *pole_msg_snd;
 	pole_msg_snd = (struct mot_pap_msg*) malloc(sizeof(struct mot_pap_msg));
 	if (pole_msg_snd != NULL) {
-		pole_msg_snd->ctrlEn = gtk_toggle_button_get_active(
-				GTK_TOGGLE_BUTTON(ctrlEn));
 		if (event->type == GDK_BUTTON_PRESS)
 			pole_msg_snd->type = MOT_PAP_TYPE_FREE_RUNNING;
 		if (event->type == GDK_BUTTON_RELEASE)
@@ -302,8 +294,6 @@ void on_pole_stop_button_event(GtkWidget *widget, GdkEventButton *event,
 	struct mot_pap_msg *pole_msg_snd;
 	pole_msg_snd = (struct mot_pap_msg*) malloc(sizeof(struct mot_pap_msg));
 	if (pole_msg_snd != NULL) {
-		pole_msg_snd->ctrlEn = gtk_toggle_button_get_active(
-				GTK_TOGGLE_BUTTON(ctrlEn));
 		pole_msg_snd->type = MOT_PAP_TYPE_STOP;
 		msg_send(pole_msg_snd, Pole);
 	} else {
@@ -331,8 +321,6 @@ void on_lift_subir_button_event(GtkWidget *widget, GdkEventButton *event,
 	struct lift_msg *lift_msg_snd;
 	lift_msg_snd = (struct lift_msg*) malloc(sizeof(struct lift_msg));
 	if (lift_msg_snd != NULL) {
-		lift_msg_snd->ctrlEn = gtk_toggle_button_get_active(
-				GTK_TOGGLE_BUTTON(ctrlEn));
 		if (event->type == GDK_BUTTON_PRESS)
 			lift_msg_snd->type = LIFT_TYPE_UP;
 		if (event->type == GDK_BUTTON_RELEASE)
@@ -349,8 +337,6 @@ void on_lift_bajar_button_event(GtkWidget *widget, GdkEventButton *event,
 	struct lift_msg *lift_msg_snd;
 	lift_msg_snd = (struct lift_msg*) malloc(sizeof(struct lift_msg));
 	if (lift_msg_snd != NULL) {
-		lift_msg_snd->ctrlEn = gtk_toggle_button_get_active(
-				GTK_TOGGLE_BUTTON(ctrlEn));
 		if (event->type == GDK_BUTTON_PRESS)
 			lift_msg_snd->type = LIFT_TYPE_DOWN;
 		if (event->type == GDK_BUTTON_RELEASE)
@@ -367,8 +353,6 @@ void on_lift_subir_toggle_toggled(GtkWidget *button, GdkEventButton *event,
 	struct lift_msg *lift_msg_snd;
 	lift_msg_snd = (struct lift_msg*) malloc(sizeof(struct lift_msg));
 	if (lift_msg_snd != NULL) {
-		lift_msg_snd->ctrlEn = gtk_toggle_button_get_active(
-				GTK_TOGGLE_BUTTON(ctrlEn));
 		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button))) {
 			lift_msg_snd->type = LIFT_TYPE_UP;
 		} else {
@@ -386,8 +370,6 @@ void on_lift_bajar_toggle_toggled(GtkWidget *button, GdkEventButton *event,
 	struct lift_msg *lift_msg_snd;
 	lift_msg_snd = (struct lift_msg*) malloc(sizeof(struct lift_msg));
 	if (lift_msg_snd != NULL) {
-		lift_msg_snd->ctrlEn = gtk_toggle_button_get_active(
-				GTK_TOGGLE_BUTTON(ctrlEn));
 		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button))) {
 			lift_msg_snd->type = LIFT_TYPE_DOWN;
 		} else {
