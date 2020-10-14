@@ -95,7 +95,7 @@ void mot_pap_stop(struct mot_pap *me);
 
 void mot_pap_isr(struct mot_pap *me);
 
-uint16_t mot_pap_offset_correction(uint16_t pos, uint16_t offset);
+uint16_t mot_pap_offset_correction(uint16_t pos, uint16_t offset, uint8_t resolution);
 
 #ifdef __cplusplus
 }

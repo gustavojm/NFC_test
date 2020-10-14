@@ -270,6 +270,14 @@ void draw_limits(gpointer scale)
 			GTK_POS_TOP, "ccwLimit");
 }
 
+void on_pole_set_offset_button_press_event(GtkWidget *widget,
+		GdkEventButton *event, gpointer user_data)
+{
+	uint16_t pos = pole_get_RDC_position();
+	pole_set_offset(pos);
+	lDebug(Info, "gui: Pole offset set to %u", pole_get_status().offset);
+}
+
 void on_pole_set_cwLimit_button_press_event(GtkWidget *widget,
 		GdkEventButton *event, gpointer user_data)
 {
