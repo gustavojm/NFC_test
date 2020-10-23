@@ -209,7 +209,7 @@ void on_pole_close_loop_button_press_event(GtkWidget *widget,
 	int32_t position = (int32_t) gtk_range_get_value(GTK_RANGE(user_data));
 
 	struct mot_pap_msg *pole_msg_snd;
-	pole_msg_snd = (struct mot_pap_msg*) malloc(sizeof(struct mot_pap_msg));
+	pole_msg_snd = (struct mot_pap_msg*) pvPortMalloc(sizeof(struct mot_pap_msg));
 	if (pole_msg_snd != NULL) {
 		pole_msg_snd->type = MOT_PAP_TYPE_CLOSED_LOOP;
 		pole_msg_snd->closed_loop_setpoint = position;
@@ -225,7 +225,7 @@ void on_pole_free_run_cw_button_event(GtkWidget *widget, GdkEventButton *event,
 	int32_t vel = (int32_t) gtk_range_get_value(GTK_RANGE(user_data));
 
 	struct mot_pap_msg *pole_msg_snd;
-	pole_msg_snd = (struct mot_pap_msg*) malloc(sizeof(struct mot_pap_msg));
+	pole_msg_snd = (struct mot_pap_msg*) pvPortMalloc(sizeof(struct mot_pap_msg));
 	if (pole_msg_snd != NULL) {
 		if (event->type == GDK_BUTTON_PRESS)
 			pole_msg_snd->type = MOT_PAP_TYPE_FREE_RUNNING;
@@ -245,7 +245,7 @@ void on_pole_free_run_ccw_button_event(GtkWidget *widget, GdkEventButton *event,
 	int32_t vel = (int32_t) gtk_range_get_value(GTK_RANGE(user_data));
 
 	struct mot_pap_msg *pole_msg_snd;
-	pole_msg_snd = (struct mot_pap_msg*) malloc(sizeof(struct mot_pap_msg));
+	pole_msg_snd = (struct mot_pap_msg*) pvPortMalloc(sizeof(struct mot_pap_msg));
 	if (pole_msg_snd != NULL) {
 		if (event->type == GDK_BUTTON_PRESS)
 			pole_msg_snd->type = MOT_PAP_TYPE_FREE_RUNNING;
@@ -300,7 +300,7 @@ void on_pole_stop_button_event(GtkWidget *widget, GdkEventButton *event,
 		gpointer user_data)
 {
 	struct mot_pap_msg *pole_msg_snd;
-	pole_msg_snd = (struct mot_pap_msg*) malloc(sizeof(struct mot_pap_msg));
+	pole_msg_snd = (struct mot_pap_msg*) pvPortMalloc(sizeof(struct mot_pap_msg));
 	if (pole_msg_snd != NULL) {
 		pole_msg_snd->type = MOT_PAP_TYPE_STOP;
 		msg_send(pole_msg_snd, Pole);
@@ -327,7 +327,7 @@ void on_lift_subir_button_event(GtkWidget *widget, GdkEventButton *event,
 		gpointer user_data)
 {
 	struct lift_msg *lift_msg_snd;
-	lift_msg_snd = (struct lift_msg*) malloc(sizeof(struct lift_msg));
+	lift_msg_snd = (struct lift_msg*) pvPortMalloc(sizeof(struct lift_msg));
 	if (lift_msg_snd != NULL) {
 		if (event->type == GDK_BUTTON_PRESS)
 			lift_msg_snd->type = LIFT_TYPE_UP;
@@ -343,7 +343,7 @@ void on_lift_bajar_button_event(GtkWidget *widget, GdkEventButton *event,
 		gpointer user_data)
 {
 	struct lift_msg *lift_msg_snd;
-	lift_msg_snd = (struct lift_msg*) malloc(sizeof(struct lift_msg));
+	lift_msg_snd = (struct lift_msg*) pvPortMalloc(sizeof(struct lift_msg));
 	if (lift_msg_snd != NULL) {
 		if (event->type == GDK_BUTTON_PRESS)
 			lift_msg_snd->type = LIFT_TYPE_DOWN;
@@ -359,7 +359,7 @@ void on_lift_subir_toggle_toggled(GtkWidget *button, GdkEventButton *event,
 		gpointer user_data)
 {
 	struct lift_msg *lift_msg_snd;
-	lift_msg_snd = (struct lift_msg*) malloc(sizeof(struct lift_msg));
+	lift_msg_snd = (struct lift_msg*) pvPortMalloc(sizeof(struct lift_msg));
 	if (lift_msg_snd != NULL) {
 		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button))) {
 			lift_msg_snd->type = LIFT_TYPE_UP;
@@ -376,7 +376,7 @@ void on_lift_bajar_toggle_toggled(GtkWidget *button, GdkEventButton *event,
 		gpointer user_data)
 {
 	struct lift_msg *lift_msg_snd;
-	lift_msg_snd = (struct lift_msg*) malloc(sizeof(struct lift_msg));
+	lift_msg_snd = (struct lift_msg*) pvPortMalloc(sizeof(struct lift_msg));
 	if (lift_msg_snd != NULL) {
 		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button))) {
 			lift_msg_snd->type = LIFT_TYPE_DOWN;

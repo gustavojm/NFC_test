@@ -1,7 +1,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <math.h>
 
 #include "board.h"
 #include "FreeRTOS.h"
@@ -270,6 +269,7 @@ void mot_pap_isr(struct mot_pap *me)
 		xHigherPriorityTaskWoken = pdFALSE;
 		xSemaphoreGiveFromISR(me->supervisor_semaphore,
 				&xHigherPriorityTaskWoken);
+
 		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 	}
 }
@@ -301,15 +301,15 @@ int32_t mot_pap_freq_calculate(struct pid *pid, uint32_t setpoint, uint32_t pos)
 
 /**
  * @brief	corrects possible offsets of RDC alignment.
- * @param 	pos
- * @param 	offset
+ * @param 	pos		: current RDC position
+ * @param 	offset	: RDC value for 0 degrees
  * @return	the offset corrected position
  */
 uint16_t mot_pap_offset_correction(uint16_t pos, uint16_t offset, uint8_t resolution)
 {
 	int32_t corrected = pos - offset;
 	if (corrected < 0)
-		corrected = corrected + (int32_t) pow(2, resolution);
+		corrected = corrected + (int32_t) (1  << resolution);
 	return (uint16_t) corrected;
 }
 

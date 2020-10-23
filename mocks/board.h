@@ -105,6 +105,17 @@ static inline void Board_ENET_GetMacADDR(__attribute__((unused)) uint8_t *mcaddr
 
 void Board_SSP_Init(__attribute__((unused)) LPC_SSP_T *pSSP);
 
+static inline void SystemCoreClockUpdate(void) {
+	return;
+}
+static inline void Board_SystemInit(){
+	return;
+}
+static inline void Board_Init() {
+	return;
+}
+
+
 static inline void Board_UART_Init(__attribute__((unused)) LPC_USART_T *pUART) {
 	return;
 }

@@ -15,7 +15,7 @@
 #include "tmr.h"
 
 #define POLE_TASK_PRIORITY ( configMAX_PRIORITIES - 2 )
-#define POLE_SUPERVISOR_TASK_PRIORITY ( configMAX_PRIORITIES - 2 )
+#define POLE_SUPERVISOR_TASK_PRIORITY ( configMAX_PRIORITIES )
 
 QueueHandle_t pole_queue = NULL;
 
@@ -56,7 +56,7 @@ static void pole_task(void *par)
 				break;
 			}
 
-			free(msg_rcv);
+			vPortFree(msg_rcv);
 		}
 	}
 }
@@ -119,12 +119,12 @@ void pole_init()
 	if (pole_supervisor_semaphore != NULL) {
 		// Create the 'handler' task, which is the task to which interrupt processing is deferred
 		xTaskCreate(supervisor_task, "PoleSupervisor",
-		configMINIMAL_STACK_SIZE,
-		NULL, POLE_SUPERVISOR_TASK_PRIORITY, NULL);
+		2048,
+		NULL, 10, NULL);
 		lDebug(Info, "pole: supervisor task created");
 	}
 
-	xTaskCreate(pole_task, "Pole", configMINIMAL_STACK_SIZE, NULL,
+	xTaskCreate(pole_task, "Pole", 512, NULL,
 	POLE_TASK_PRIORITY, NULL);
 
 	lDebug(Info, "pole: task created");
@@ -152,6 +152,11 @@ uint16_t pole_get_RDC_position()
 }
 
 
+/**
+ * @brief	sets pole offset
+ * @param 	offset		: RDC position for 0 degrees
+ * @return	nothing
+ */
 void pole_set_offset(uint16_t offset)
 {
 	pole.offset = offset;

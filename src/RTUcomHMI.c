@@ -1,7 +1,5 @@
-#include <sys/times.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <math.h>
 
 #include "FreeRTOS.h"
 #include "task.h"
@@ -38,7 +36,7 @@ static void RTUcomHMI_task(void *par)
 			type = LIFT_TYPE_UP;
 		}
 
-		lift_msg_snd = (struct lift_msg*) malloc(sizeof(struct lift_msg));
+		lift_msg_snd = (struct lift_msg*) pvPortMalloc(sizeof(struct lift_msg));
 
 		if (lift_msg_snd != NULL) {
 			lift_msg_snd->type = type;
@@ -54,7 +52,7 @@ static void RTUcomHMI_task(void *par)
 		}
 
 		// Generar un mensaje para pole con movimiento FREERUN en sentido CW y velocidad 5
-		pole_msg_snd = (struct mot_pap_msg*) malloc(
+		pole_msg_snd = (struct mot_pap_msg*) pvPortMalloc(
 				sizeof(struct mot_pap_msg));
 		if (pole_msg_snd) {
 			pole_msg_snd->type = MOT_PAP_TYPE_FREE_RUNNING;
@@ -73,13 +71,11 @@ static void RTUcomHMI_task(void *par)
 
 		// Generar un mensaje para pole con movimiento closed loop y set point aleatorio
 
-		pole_msg_snd = (struct mot_pap_msg*) malloc(
+		pole_msg_snd = (struct mot_pap_msg*) pvPortMalloc(
 				sizeof(struct mot_pap_msg));
 		if (pole_msg_snd) {
-			struct tms time;
-			srandom(times(&time));
 			pole_msg_snd->type = MOT_PAP_TYPE_CLOSED_LOOP;
-			pole_msg_snd->closed_loop_setpoint = random() % (int32_t)pow(2, 16);
+			pole_msg_snd->closed_loop_setpoint = 5555;
 			if (xQueueSend(pole_queue, &pole_msg_snd,
 					(TickType_t) 10) == pdPASS) {
 				lDebug(Info, "comm: pole command sent");
@@ -92,7 +88,7 @@ static void RTUcomHMI_task(void *par)
 		}
 
 		// Generar un mensaje de detención para pole
-		pole_msg_snd = (struct mot_pap_msg*) malloc(
+		pole_msg_snd = (struct mot_pap_msg*) pvPortMalloc(
 				sizeof(struct mot_pap_msg));
 		if (pole_msg_snd) {
 			pole_msg_snd->type = MOT_PAP_TYPE_STOP;
@@ -111,8 +107,9 @@ static void RTUcomHMI_task(void *par)
 
 void comm_init()
 {
-	xTaskCreate(RTUcomHMI_task, "RTUcomHMI", configMINIMAL_STACK_SIZE, NULL,
-	COMM_TASK_PRIORITY, NULL);
+	xTaskCreate(RTUcomHMI_task, "RTUcomHMI", 512, NULL,
+	6, NULL);
+	lDebug(Info, "comm: task created");
 }
 
 void task_status_get_all()
