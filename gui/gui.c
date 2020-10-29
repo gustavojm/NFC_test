@@ -21,8 +21,6 @@ GtkWidget *pole_pulse_label;
 GtkWidget *pole_rdc_scale;
 GtkWidget *lift_dir_label;
 GtkWidget *lift_motor_label;
-GtkWidget *lift_upLimit;
-GtkWidget *lift_downLimit;
 
 GMainContext *context;
 
@@ -130,9 +128,6 @@ void gui_task(void *args)
 			gtk_builder_get_object(builder, "lift_dir_label"));
 	lift_motor_label = GTK_WIDGET(
 			gtk_builder_get_object(builder, "lift_motor_label"));
-	lift_upLimit = GTK_WIDGET(gtk_builder_get_object(builder, "lift_upLimit"));
-	lift_downLimit = GTK_WIDGET(
-			gtk_builder_get_object(builder, "lift_downLimit"));
 
 	gtk_builder_connect_signals(builder, NULL);
 
@@ -386,20 +381,5 @@ void on_lift_bajar_toggle_toggled(GtkWidget *button, GdkEventButton *event,
 		msg_send(lift_msg_snd, Lift);
 	} else {
 		lDebug(Error, "gui: out of memory");
-	}
-}
-
-void on_lift_upLimit_toggled(GtkToggleButton *togglebutton, gpointer user_data)
-{
-	if (gtk_toggle_button_get_active(togglebutton)) { //simulate rising edge
-		GPIO0_IRQHandler();
-	}
-}
-
-void on_lift_downLimit_toggled(GtkToggleButton *togglebutton,
-		gpointer user_data)
-{
-	if (gtk_toggle_button_get_active(togglebutton)) { //simulate rising edge
-		GPIO1_IRQHandler();
 	}
 }
