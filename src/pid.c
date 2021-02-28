@@ -1,10 +1,12 @@
 #include <stddef.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <math.h>
 
 #include "FreeRTOS.h"
 #include "task.h"
 #include "pid.h"
+#include "debug.h"
 
 /**
  * @brief	constrains the out value to limit
@@ -32,22 +34,18 @@ static double abs_limit(const double out, const int32_t limit)
  * @param 	td			: derivative time
  * @param 	limit		: output limiter value
  */
-void pid_controller_init(struct pid *me, double kp, int32_t sample_time,
-		double ti, double td, int32_t limit)
+void pid_controller_init(struct pid *me, double kp, double ki, double kd,
+		int32_t sample_time, int32_t min_limit, int32_t max_limit)
 {
 	me->kp = kp;
-	me->ki = kp * sample_time / ti;
-	me->kd = kp * td / sample_time;
+	me->ki = ki;
+	me->kd = kd;
 	me->sample_time_in_ticks = pdMS_TO_TICKS(sample_time);
-	me->limit = limit;
-	me->errors[0] = 0;
-	me->errors[1] = 0;
-	me->errors[2] = 0;
+	me->min_limit = min_limit;
+	me->max_limit = max_limit;
 	me->setpoint = 0;
-	me->prop_out = 0;
-	me->int_out = 0;
-	me->der_out = 0;
-	me->output = 0;
+	me->sloped_setpoint = 0;
+	me->integral_term = 0;
 }
 
 /**
@@ -62,25 +60,73 @@ void pid_controller_init(struct pid *me, double kp, int32_t sample_time,
 int32_t pid_controller_calculate(struct pid *me, int32_t setpoint,
 		int32_t input)
 {
-
+	double error;
 	TickType_t now = xTaskGetTickCount();
 	TickType_t elapsed = now - me->last_time_in_ticks;
 
-	if ((me->setpoint != setpoint) | (elapsed > me->sample_time_in_ticks)) {
+	if (setpoint != me->setpoint) {
+		// Slope calculation
+		me->slope = MAX(abs(setpoint - input), 1) / 100;
 		me->setpoint = setpoint;
-		me->errors[0] = me->setpoint - input;
-		me->prop_out = me->kp * (me->errors[0] - me->errors[1]);
-		me->int_out = me->ki * me->errors[0];
-		me->der_out = me->kd
-				* (me->errors[0] - 2 * me->errors[1] + me->errors[2]);
-		me->output += (me->prop_out + me->int_out + me->der_out);
+		me->sloped_setpoint = input;				// Start increasing setpoint from current input value
+	}
 
-		me->output = abs_limit(me->output, me->limit);
+	if ((me->sloped_setpoint != setpoint) | (elapsed > me->sample_time_in_ticks)) {
+		lDebug(Info, "///// SLOPE: %i", me->slope);
 
-		me->errors[2] = me->errors[1];
-		me->errors[1] = me->errors[0];
+		if (me->slope != 0) {
+			if (setpoint > me->sloped_setpoint) {
+				me->sloped_setpoint += me->slope;
+				if (me->sloped_setpoint > setpoint) {
+					me->sloped_setpoint = setpoint;
+					me->slope = 0;
+				}
+			} else {
+				me->sloped_setpoint -= me->slope;
+				if (me->sloped_setpoint < setpoint) {
+					me->sloped_setpoint = setpoint;
+					me->slope = 0;
+				}
+			}
+		}
+//			me->setpoint = setpoint;
+		me->integral_term = 0;
 
+		lDebug(Info, "///// SETPOINT: %i", me->sloped_setpoint);
+
+		// Compute error and normalize it to 100%
+		error = abs(me->sloped_setpoint - input) * (double) 100 / 65536;
+		lDebug(Info, "///// ERROR: %f", error);
+
+		// Compute integral term
+		me->integral_term += me->ki * error;
+
+		// Compute differential on input
+		double dinput = (input - me->last_input) * (double) 100 / 65535;
+		lDebug(Info, "///// DINPUT: %f", dinput);
+
+		// Compute PID output
+		me->output = me->kp * error + me->integral_term - me->kd * dinput;
+
+		lDebug(Info, "///// UNLIMITED: %f", me->output);
+
+		// Anti wind-up
+		if (me->output > me->max_limit) {
+			me->integral_term -= (me->output - me->max_limit);
+			me->output = me->max_limit;
+		} else if (me->output < me->min_limit) {
+			me->integral_term += (me->min_limit - me->output);
+			me->output = me->min_limit;
+		}
+
+		//me->output = abs_limit(me->output, 100);
+
+		me->last_input = input;
 		me->last_time_in_ticks = now;
+
+		lDebug(Info, "///// proporcional: %f", me->kp * error);
+		lDebug(Info, "///// integrativo: %f", me->integral_term);
+		lDebug(Info, "///// derivativo: %f", me->kd * dinput);
 	}
 	return (int32_t) floor(me->output);
 }

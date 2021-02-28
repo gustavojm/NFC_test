@@ -16,16 +16,17 @@ extern "C" {
 struct pid {
 	double kp, ki, kd;
 	TickType_t sample_time_in_ticks;
-	int32_t errors[3];
-	int32_t setpoint, limit;
-	double prop_out, int_out, der_out, output;
+	int32_t sloped_setpoint, setpoint, min_limit, max_limit, slope;
+	int32_t last_input;
+	double prop_out, integral_term, der_out, output;
 	TickType_t last_time_in_ticks;
 };
 
-void pid_controller_init(struct pid *me, double kp, int32_t sample_time,
-		double ti, double td, int32_t limit);
+void pid_controller_init(struct pid *me, double kp, double ki, double kd,
+		int32_t sample_time, int32_t min_limit, int32_t max_limit);
 
-int32_t pid_controller_calculate(struct pid *me, int32_t setpoint, int32_t input);
+int32_t pid_controller_calculate(struct pid *me, int32_t setpoint,
+		int32_t input);
 
 #ifdef __cplusplus
 }
