@@ -101,12 +101,15 @@ void pole_init()
 	/* @formatter:off */
 	pid_controller_init(
 			&pid,
-			10, 			// kp
-			0.2,	 			// ki
-			100, 			// kd
-			1, 			// sample time
-			5,				// min_limit
-			100				// max_limit
+			10, 			// kp	Proportional gain
+			0.0, 			// ki	Integral gain
+			100,  			// kd	Derivative gain
+			1.5,			// kb	Back calculation (anti-windup) gain
+			100, 			// sample time
+			10,				// min_limit
+			100,			// max_limit
+			100,			// number of setpoint increments to reach the desired setpoint
+			65535			// input_span
 			);
 	/* @formatter:on */
 
