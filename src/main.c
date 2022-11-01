@@ -48,7 +48,7 @@ int main(void)
 	Board_Init();
 
 
-	debugSetLevel(Info);
+	debugLocalSetLevel(Info);
 #ifdef TEST_GUI
     signal(SIGSEGV, handler);   // install our handler
 #endif

@@ -1,6 +1,3 @@
-.project
-.cproject
-.settings
 obj/
 FreeRTOS-Sim
 /Default/

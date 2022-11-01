@@ -2,7 +2,7 @@
 
 #include "debug.h"
 
-enum debugLevels debugLevel = Info;
+enum debugLevels debugLocalLevel = Info;
 
 FILE *debugFile = NULL;
 
@@ -10,9 +10,9 @@ FILE *debugFile = NULL;
  * @brief 	sets debug level.
  * @param 	lvl 	:name of file to send output to
  */
-void debugSetLevel(enum debugLevels lvl)
+void debugLocalSetLevel(enum debugLevels lvl)
 {
-	debugLevel = lvl;
+	debugLocalLevel = lvl;
 }
 
 /**
